@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
+/*   Updated: 2021/02/01 15:38:22 by user42           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-static int init_param()
+static int	init_param(void)
 {
 	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
 		return (FAILED);
@@ -9,16 +20,19 @@ static int init_param()
 	return (SUCCESS);
 }
 
-static int init_philo()
+static int	init_philo(void)
 {
 	int i;
 
 	i = 0;
-	if (!(g_philo->forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * g_philo->nb_philo)))
+	if (!(g_philo->forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)
+		* g_philo->nb_philo)))
 		return (FAILED);
-	if (!(g_philo->threads = (pthread_t*)malloc(sizeof(pthread_t) * (g_philo->nb_philo + 1))))
+	if (!(g_philo->threads = (pthread_t*)malloc(sizeof(pthread_t)
+		* (g_philo->nb_philo + 1))))
 		return (FAILED);
-	if (!(g_philo->last_eaten = (struct timeval*)malloc(sizeof(struct timeval) * g_philo->nb_philo)))
+	if (!(g_philo->last_eaten = (struct timeval*)malloc(sizeof(struct timeval)
+		* g_philo->nb_philo)))
 		return (FAILED);
 	if (!(g_philo->has_eaten = (int*)malloc(sizeof(int) * g_philo->nb_philo)))
 		return (FAILED);
@@ -35,7 +49,7 @@ static int init_philo()
 	return (SUCCESS);
 }
 
-int get_param(char **av)
+int			get_param(char **av)
 {
 	if (init_param())
 		return (ERR_MALLOC);

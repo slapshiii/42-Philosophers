@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   destructor.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/01 15:27:29 by user42            #+#    #+#             */
+/*   Updated: 2021/02/01 15:29:20 by user42           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-int clean_exit(int status)
+int	clean_exit(int status)
 {
 	int i;
 
@@ -24,6 +35,5 @@ int clean_exit(int status)
 		free(g_philo);
 	}
 	g_philo = NULL;
-
 	return (status);
 }

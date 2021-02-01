@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lib.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
+/*   Updated: 2021/02/01 15:31:20 by user42           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-int is_whitespace(char c)
+int		is_whitespace(char c)
 {
 	if (c == 32 || (c < 14 && c > 8))
 		return (1);
 	return (0);
 }
 
-int ft_atoi(const char *s)
+int		ft_atoi(const char *s)
 {
 	int res;
 	int sig;
@@ -34,9 +45,9 @@ int ft_atoi(const char *s)
 
 char	*ft_itoa_dec(int num)
 {
-	char buf[11];
-	char *res;
-	int sig;
+	char	buf[11];
+	char	*res;
+	int		sig;
 
 	sig = 0;
 	res = &buf[sizeof(buf) - 1];
@@ -58,7 +69,7 @@ char	*ft_itoa_dec(int num)
 	return (res);
 }
 
-int get_timestamp(struct timeval* time)
+int		get_timestamp(struct timeval *time)
 {
 	int res;
 
