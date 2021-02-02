@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/01 17:44:25 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/02 15:37:22 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@ static int	init_param(void)
 	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
 		return (FAILED);
 	memset(g_philo, 0, sizeof(t_philo));
+	sem_unlink(SEM_LOCK);
+	if ((g_philo->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
+		0660, 2)) == SEM_FAILED)
+		return (FAILED);
+	sem_unlink(SEM_PRINT);
+	if ((g_philo->print = sem_open(SEM_PRINT, O_CREAT | O_EXCL,
+		0660, 1)) == SEM_FAILED)
+		return (FAILED);
 	return (SUCCESS);
 }
 
@@ -24,8 +32,10 @@ static int	init_philo(void)
 {
 	int i;
 
-	i = 0;
-	if (!(g_philo->forks = sem_open("forks", O_CREAT | O_EXCL, 0660, g_philo->nb_philo)))
+	i = -1;
+	sem_unlink(SEM_FORK);
+	if ((g_philo->forks = sem_open(SEM_FORK, O_CREAT | O_EXCL,
+		0660, g_philo->nb_philo)) == SEM_FAILED)
 		return (FAILED);
 	if (!(g_philo->threads = (pthread_t*)malloc(sizeof(pthread_t)
 		* (g_philo->nb_philo + 1))))
@@ -38,10 +48,9 @@ static int	init_philo(void)
 	memset(g_philo->threads, 0, sizeof(pthread_t) * (g_philo->nb_philo + 1));
 	memset(g_philo->last_eaten, 0, sizeof(struct timeval) * g_philo->nb_philo);
 	memset(g_philo->has_eaten, 0, sizeof(int) * g_philo->nb_philo);
-	while (i < g_philo->nb_philo)
+	while (++i < g_philo->nb_philo)
 	{
 		gettimeofday(&(g_philo->last_eaten[i]), NULL);
-		++i;
 	}
 	return (SUCCESS);
 }

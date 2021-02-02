@@ -6,11 +6,25 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
-/*   Updated: 2021/02/01 15:31:20 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/02 12:24:12 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+char	*ft_strcat(char *dest, char *srcs)
+{
+	while (dest && *dest)
+		dest++;
+	while (srcs && *srcs)
+	{
+		*dest = *srcs;
+		dest++;
+		srcs++;
+	}
+	*dest = '\0';
+	return (dest);
+}
 
 int		is_whitespace(char c)
 {
@@ -73,6 +87,6 @@ int		get_timestamp(struct timeval *time)
 {
 	int res;
 
-	res = time->tv_usec / 1000 + (time->tv_sec % 1000000) * 1000;
+	res = time->tv_usec / 1000 + (time->tv_sec % 100000) * 1000;
 	return (res);
 }

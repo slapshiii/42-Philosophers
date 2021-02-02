@@ -6,15 +6,14 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/01 15:39:10 by user42            #+#    #+#              #
-#    Updated: 2021/02/01 18:30:00 by user42           ###   ########.fr        #
+#    Updated: 2021/02/02 15:31:51 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_two
 
-CFLAGS	= -Werror -Wextra -Wall -I.
-CFLAGS	+= -fsanitize=address
-CFLAGS 	+= -g3
+CFLAGS	= -Werror -Wextra -Wall -g3 -I.
+#CFLAGS	+= -fsanitize=thread
 
 ifeq ("$(UNAME)", Darwin)
 	CC		=	gcc
