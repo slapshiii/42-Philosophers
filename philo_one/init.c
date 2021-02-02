@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/01 15:38:22 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/02 14:18:38 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static int	init_philo(void)
 {
 	int i;
 
-	i = 0;
+	i = -1;
 	if (!(g_philo->forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)
-		* g_philo->nb_philo)))
+		* (g_philo->nb_philo + 1))))
 		return (FAILED);
 	if (!(g_philo->threads = (pthread_t*)malloc(sizeof(pthread_t)
 		* (g_philo->nb_philo + 1))))
@@ -40,12 +40,12 @@ static int	init_philo(void)
 	memset(g_philo->threads, 0, sizeof(pthread_t) * (g_philo->nb_philo + 1));
 	memset(g_philo->last_eaten, 0, sizeof(struct timeval) * g_philo->nb_philo);
 	memset(g_philo->has_eaten, 0, sizeof(int) * g_philo->nb_philo);
-	while (i < g_philo->nb_philo)
+	while (++i < g_philo->nb_philo)
 	{
 		gettimeofday(&(g_philo->last_eaten[i]), NULL);
 		pthread_mutex_init(&(g_philo->forks[i]), NULL);
-		++i;
 	}
+	pthread_mutex_init(&(g_philo->forks[g_philo->nb_philo]), NULL);
 	return (SUCCESS);
 }
 

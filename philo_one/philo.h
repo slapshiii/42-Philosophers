@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/01 15:54:08 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/02 13:49:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nb_must_eat;
+	int				status;
 	int				*has_eaten;
 	struct timeval	*time_start;
 	pthread_mutex_t	*forks;
@@ -67,6 +68,7 @@ int				launch_thread(void);
 
 void			print_msg(int id, int msg);
 
+char			*ft_strcat(char *dest, char *srcs);
 int				get_timestamp(struct timeval *time);
 int				is_whitespace(char c);
 int				ft_atoi(const char *s);

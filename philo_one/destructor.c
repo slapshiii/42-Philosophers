@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:29 by user42            #+#    #+#             */
-/*   Updated: 2021/02/01 15:29:20 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/02 14:16:41 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	clean_exit(int status)
 	i = 0;
 	if (g_philo)
 	{
-		while (i < g_philo->nb_philo)
+		while (i <= g_philo->nb_philo)
 		{
 			pthread_mutex_destroy(&g_philo->forks[i]);
 			++i;
