@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 17:11:13 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/03 14:45:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,16 @@
 
 static int	routine(int id_philo)
 {
-	gettimeofday(&(g_philo->last_meal[id_philo]), NULL);
+	t_data	data;
+
+	memset(&data, 0, sizeof(t_data));
+	gettimeofday(&data.last_meal, NULL);
+	pthread_create(&data.monitor,NULL, &checker, &data);
 	while (!g_philo->status)
 	{
-		sem_wait(g_philo->lock);
-		sem_wait(g_philo->forks);
-		print_msg(id_philo + 1, MSG_FORK);
-		sem_wait(g_philo->forks);
-		sem_post(g_philo->lock);
-		print_msg(id_philo + 1, MSG_FORK);
-		print_msg(id_philo + 1, MSG_EAT);
-		usleep(g_philo->time_to_eat);
-		gettimeofday(&(g_philo->last_meal[id_philo]), NULL);
-		g_philo->nb_meal[id_philo]++;
-		sem_post(g_philo->forks);
-		sem_post(g_philo->forks);
-		print_msg(id_philo + 1, MSG_SLEEP);
-		usleep(g_philo->time_to_sleep);
-		print_msg(id_philo + 1, MSG_THINK);
+		philo_fork(id_philo);
+		philo_eat(id_philo);
+		philo_rest(id_philo);	
 	}
 	return (SUCCESS);
 }
@@ -75,25 +67,14 @@ static void	*checker(void *arg)
 	return (arg);
 }
 
-/*
-static void	kill_process(int *tab_pid)
-{
-	int	i;
-
-	i = 0;
-	while (i < g_philo->nb_philo)
-	{
-		kill(tab_pid[i], 130);
-		i++;
-	}
-}*/
-
 static int	make_philo(int id, int *pid)
 {
 	if ((pid[id] = fork()) == -1)
-			exit(clean_exit(1));
+		exit(clean_exit(1));
 	if (pid[id] == 0)
+	{
 		exit(routine(id));
+	}
 	return (0);
 }
 
@@ -101,21 +82,15 @@ int			launch_thread(void)
 {
 	pid_t	pid[g_philo->nb_philo];
 	int		i;
-	void	*ptr;
 	int		res;
 
 	i = 0;
 	res = 0;
-	ptr = &res;
 	while (i < g_philo->nb_philo)
 	{
 		make_philo(i, pid);
 		i++;
 	}
-	if (pthread_create(g_philo->monitor, NULL, &checker, (void*)&res))
-		return (FAILED);
-	pthread_join(*g_philo->monitor, &ptr);
-	while (--i >= 0)
-		kill(pid[i], SIGKILL);
+	waitpid(0, &res, 0);
 	return (SUCCESS);
 }

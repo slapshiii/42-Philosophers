@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/01 15:39:10 by user42            #+#    #+#              #
-#    Updated: 2021/02/02 15:39:49 by user42           ###   ########.fr        #
+#    Updated: 2021/02/03 14:46:48 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ endif
 
 SRCS = 	main.c \
 		philo_three.c \
+		philo_action.c \
 		init.c \
 		destructor.c \
 		print.c \

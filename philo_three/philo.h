@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 17:06:18 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/03 14:42:03 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,14 @@ typedef struct	s_philo
 	int				*nb_meal;
 }				t_philo;
 
+typedef struct	s_data
+{
+	int				nb_meal;
+	struct timeval	last_meal;
+	pthread_t		*monitor;
+}				t_data;
+
+
 t_philo			*g_philo;
 
 int				get_param(char **av);
@@ -71,6 +79,10 @@ int				get_param(char **av);
 int				clean_exit(int status);
 
 int				launch_thread(void);
+
+void			philo_fork(int id);
+void			philo_eat(int id);
+void			philo_rest(int id);
 
 void			print_msg(int id, int msg);
 
