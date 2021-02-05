@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 18:01:46 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 18:17:08 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void	report_corpse(int i)
 	diff = time_i - time_p;
 	if (diff > g_philo->time_to_die)
 	{
+		sem_wait(g_philo->print);
 		print_msg(i, MSG_DIED);
+		g_philo->status = 0;
+		//sem_post(g_philo->print);
 		sem_post(g_philo->corpse);
 		g_philo->philo[i]->status = 0;
 	}
@@ -60,7 +63,9 @@ void	report_meal(int i)
 		return;
 	if (g_philo->philo[i]->nb_meal < g_philo->nb_must_eat)
 		return;
+	sem_wait(g_philo->print);
 	print_msg(i, MSG_ENDED);
+	sem_post(g_philo->print);
 	sem_post(g_philo->meals);
 	g_philo->philo[i]->status = 0;
 }
@@ -95,8 +100,6 @@ void	launch_thread(void)
 		make_philo(i++);
 	pthread_create(&monitor_dead, NULL, watch_dead, NULL);
 	pthread_create(&monitor_meal, NULL, watch_meal, NULL);
-	//pthread_detach(monitor_dead);
-	//pthread_detach(monitor_meal);
 	while (g_philo->status)
 		;
 	i = 0;

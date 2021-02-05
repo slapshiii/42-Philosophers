@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 16:36:22 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 18:05:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # define SEM_FORK "sem_fork"
 # define SEM_DEAD "sem_dead"
 # define SEM_MEAL "sem_meal"
+# define SEM_MSGS "sem_msgs"
 
 typedef struct	s_data
 {
@@ -71,6 +72,7 @@ typedef struct	s_philo
 	sem_t			*lock;
 	sem_t			*meals;
 	sem_t			*corpse;
+	sem_t			*print;
 	t_data			**philo;
 }				t_philo;
 

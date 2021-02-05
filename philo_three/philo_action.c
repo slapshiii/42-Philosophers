@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 16:42:54 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 18:08:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,21 @@ void	philo_fork(t_data *philo)
 {
 	sem_wait(g_philo->lock);
 	sem_wait(g_philo->forks);
+	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_FORK);
+	sem_post(g_philo->print);
 	sem_wait(g_philo->forks);
 	sem_post(g_philo->lock);
+	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_FORK);
+	sem_post(g_philo->print);
 }
 
 void	philo_eat(t_data *philo)
 {
+	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_EAT);
+	sem_post(g_philo->print);
 	gettimeofday(&(philo->last_meal), NULL);
 	usleep(g_philo->time_to_eat);
 	philo->nb_meal++;
@@ -61,7 +67,11 @@ void	philo_eat(t_data *philo)
 
 void	philo_rest(t_data *philo)
 {
+	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_SLEEP);
+	sem_post(g_philo->print);
 	usleep(g_philo->time_to_sleep);
+	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_THINK);
+	sem_post(g_philo->print);
 }

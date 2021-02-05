@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 16:21:54 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 18:14:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ static int	init_philo(void)
 	sem_unlink(SEM_MEAL);
 	if ((g_philo->meals = sem_open(SEM_MEAL, O_CREAT | O_EXCL,
 		0660, 0)) == SEM_FAILED)
+		return (FAILED);
+	sem_unlink(SEM_MSGS);
+	if ((g_philo->print = sem_open(SEM_MSGS, O_CREAT | O_EXCL,
+		0660, 1)) == SEM_FAILED)
 		return (FAILED);
 	return (SUCCESS);
 }
