@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 15:18:19 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 16:18:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 /*
 **	nb_philo; time_to_die; time_to_eat; time_to_sleep; nb_must_eat
 */
+
+t_philo	*g_philo;
 
 int		main(int ac, char **av)
 {
@@ -30,7 +32,6 @@ int		main(int ac, char **av)
 		fprintf(stderr, "An error has occured\n");
 		return (clean_exit(status));
 	}
-	if ((status = launch_thread()) == -1)
-		fprintf(stderr, "An error has occured thread\n");
+	launch_thread();
 	return (clean_exit(status));
 }

@@ -6,54 +6,17 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 16:32:26 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/05 16:21:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	init_param(void)
+static int	init_param(char **av)
 {
 	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
 		return (FAILED);
 	memset(g_philo, 0, sizeof(t_philo));
-	sem_unlink(SEM_LOCK);
-	if ((g_philo->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
-		0660, 2)) == SEM_FAILED)
-		return (FAILED);
-	sem_unlink(SEM_PRINT);
-	if ((g_philo->print = sem_open(SEM_PRINT, O_CREAT | O_EXCL,
-		0660, 1)) == SEM_FAILED)
-		return (FAILED);
-	return (SUCCESS);
-}
-
-static int	init_philo(void)
-{
-	int i;
-
-	i = -1;
-	sem_unlink(SEM_FORK);
-	if ((g_philo->forks = sem_open(SEM_FORK, O_CREAT | O_EXCL,
-		0660, g_philo->nb_philo)) == SEM_FAILED)
-		return (FAILED);
-	if (!(g_philo->monitor = (pthread_t*)malloc(sizeof(pthread_t))))
-		return (FAILED);
-	if (!(g_philo->last_meal = (struct timeval*)malloc(sizeof(struct timeval)
-		* g_philo->nb_philo)))
-		return (FAILED);
-	if (!(g_philo->nb_meal = (int*)malloc(sizeof(int) * g_philo->nb_philo)))
-		return (FAILED);
-	memset(g_philo->monitor, 0, sizeof(pthread_t));
-	memset(g_philo->last_meal, 0, sizeof(struct timeval) * g_philo->nb_philo);
-	memset(g_philo->nb_meal, 0, sizeof(int) * g_philo->nb_philo);
-	return (SUCCESS);
-}
-
-int			get_param(char **av)
-{
-	if (init_param())
-		return (ERR_MALLOC);
 	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 1)
 		return (ERR_NUM_PHILO);
 	if (((g_philo)->time_to_die = ft_atoi(av[2])) < 1)
@@ -66,6 +29,45 @@ int			get_param(char **av)
 		return (ERR_NUM_PHILO);
 	else if (av[5] == NULL)
 		(g_philo)->nb_must_eat = -1;
+	return (SUCCESS);
+}
+
+static int	init_philo(void)
+{
+	sem_unlink(SEM_FORK);
+	if ((g_philo->forks = sem_open(SEM_FORK, O_CREAT | O_EXCL,
+		0660, g_philo->nb_philo)) == SEM_FAILED)
+		return (FAILED);
+	sem_unlink(SEM_LOCK);
+	if ((g_philo->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
+		0660, (g_philo->nb_philo) >> 1)) == SEM_FAILED)
+		return (FAILED);
+	sem_unlink(SEM_DEAD);
+	if ((g_philo->corpse = sem_open(SEM_DEAD, O_CREAT | O_EXCL,
+		0660, 0)) == SEM_FAILED)
+		return (FAILED);
+	sem_unlink(SEM_MEAL);
+	if ((g_philo->meals = sem_open(SEM_MEAL, O_CREAT | O_EXCL,
+		0660, 0)) == SEM_FAILED)
+		return (FAILED);
+	return (SUCCESS);
+}
+
+int			get_param(char **av)
+{
+	int	i;
+
+	i = -1;
+	if (init_param(av))
+		return (ERR_MALLOC);
+	if (!(g_philo->philo = (t_data**)malloc(sizeof(t_data*)
+		* g_philo->nb_philo)))
+		return (ERR_MALLOC);
+	while (++i < g_philo->nb_philo)
+	{
+		if (!(g_philo->philo[i] = data_philo(i)))
+			return(ERR_MALLOC);
+	}
 	if (init_philo())
 		return (ERR_INIT_MUTEX);
 	return (SUCCESS);
