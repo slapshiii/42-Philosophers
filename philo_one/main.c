@@ -6,11 +6,44 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 18:21:26 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 16:08:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+t_philo *g_philo;
+
+void	make_philo(int i)
+{
+	pthread_create(&g_philo->philo[i]->monitor,
+		NULL, philo_monitor, g_philo->philo[i]);
+	pthread_create(&g_philo->philo[i]->main,
+		NULL, watcher_loop, g_philo->philo[i]);
+}
+
+void	launch_thread(void)
+{
+	int			i;
+	pthread_t	monitor_meal;
+
+	i = 0;
+	g_philo->status = 1;
+	while (i < g_philo->nb_philo)
+		make_philo(i++);
+	pthread_create(&monitor_meal, NULL, watch_meal, NULL);
+	while (g_philo->status)
+		;
+	i = 0;
+	while (i < g_philo->nb_philo)
+	{
+		g_philo->philo[i]->status = 0;
+		pthread_join(g_philo->philo[i]->monitor, NULL);
+		pthread_join(g_philo->philo[i]->main, NULL);
+		i++;
+	}
+	pthread_join(monitor_meal, NULL);
+}
 
 /*
 **	nb_philo; time_to_die; time_to_eat; time_to_sleep; nb_must_eat
@@ -30,7 +63,6 @@ int		main(int ac, char **av)
 		fprintf(stderr, "An error has occured\n");
 		return (clean_exit(status));
 	}
-	if ((status = launch_thread()) == -1)
-		fprintf(stderr, "An error has occured thread\n");
+	launch_thread();
 	return (clean_exit(status));
 }

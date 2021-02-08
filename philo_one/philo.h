@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 13:49:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 16:15:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <fcntl.h>
+# include <sys/stat.h>
 
-# define MIN_EAT 0
+# define MIN_EAT 1
 
 # define SUCCESS 0
 # define FAILED -1
@@ -39,6 +41,16 @@
 # define MSG_DIED 4
 # define MSG_ENDED 5
 
+typedef struct	s_data
+{
+	int				status;
+	int				nb_meal;
+	int				id;
+	struct timeval	last_meal;
+	pthread_t		monitor;
+	pthread_t		main;
+}				t_data;
+
 typedef struct	s_philo
 {
 	int				nb_philo;
@@ -47,11 +59,11 @@ typedef struct	s_philo
 	int				time_to_sleep;
 	int				nb_must_eat;
 	int				status;
-	int				*has_eaten;
-	struct timeval	*time_start;
+	int				finished;
+	pthread_mutex_t	*meals;
+	pthread_mutex_t	*print;
 	pthread_mutex_t	*forks;
-	pthread_t		*threads;
-	struct timeval	*last_eaten;
+	t_data			**philo;
 }				t_philo;
 
 t_philo			*g_philo;
@@ -60,11 +72,17 @@ int				get_param(char **av);
 
 int				clean_exit(int status);
 
-void			*checker(void *arg);
-void			*routine(void *i);
-int				is_dead(void);
-int				thread_cancel(void);
-int				launch_thread(void);
+void			*watch_meal(void *arg);
+void			report_corpse(t_data *philo);
+void			report_meal(t_data *philo);
+void			*watcher_loop(void *arg);
+void			launch_thread(void);
+
+t_data			*data_philo(int i);
+void			*philo_monitor(void *arg);
+void			philo_fork(t_data *philo);
+void			philo_eat(t_data *philo);
+void			philo_rest(t_data *philo);
 
 void			print_msg(int id, int msg);
 

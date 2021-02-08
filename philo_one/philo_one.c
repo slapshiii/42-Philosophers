@@ -6,114 +6,71 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 14:19:33 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 16:07:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		is_dead(void)
+void	report_corpse(t_data *philo)
 {
-	int				i;
 	struct timeval	time;
-	int				int_time;
+	int				diff;
+	int				time_i;
+	int				time_p;
 
-	i = 0;
-	gettimeofday(&(time), NULL);
-	int_time = get_timestamp(&time);
-	while (i < g_philo->nb_philo)
+	gettimeofday(&time, NULL);
+	time_i = get_timestamp(&time);
+	time_p = get_timestamp(&philo->last_meal);
+	diff = time_i - time_p;
+	if (diff > g_philo->time_to_die)
 	{
-		if (g_philo->nb_must_eat != -1
-			&& g_philo->has_eaten[i] >= g_philo->nb_must_eat)
-			return (-1);
-		else if (int_time
-		- get_timestamp(&(g_philo->last_eaten[i])) > g_philo->time_to_die)
-			return (i + 1);
-		i++;
+		pthread_mutex_lock(g_philo->print);
+		print_msg(philo->id, MSG_DIED);
+		g_philo->status = 0;
+		pthread_mutex_unlock(g_philo->print);
+		philo->status = 0;
 	}
-	return (0);
 }
 
-int		thread_cancel(void)
+void	*watch_meal(void *arg)
 {
-	int i;
+	int	eaten;
 
-	i = 0;
-	while (i < g_philo->nb_philo)
+	eaten = 0;
+	while (g_philo->status)
 	{
-		pthread_join(g_philo->threads[i], NULL);
-		i++;
+		if (g_philo->finished == g_philo->nb_philo)
+			break ;
 	}
-	return (0);
-}
-
-void	*checker(void *arg)
-{
-	int res;
-
-	while ((res = is_dead()) == 0)
-		;
-	g_philo->status = 1;
-	if (res == -1)
-		printf("finished\n");
-	else
-		print_msg(res, MSG_DIED);
-	*(int*)arg = res;
+	g_philo->status = 0;
 	return (arg);
 }
 
-void	*routine(void *i)
+void	report_meal(t_data *philo)
 {
-	int id_philo;
-	int nb_turn;
-
-	id_philo = (*(int*)i);
-	nb_turn = 0;
-	g_philo->has_eaten[id_philo - 1] = 0;
-	while (g_philo->status == 0)
-	{
-		pthread_mutex_lock(&(g_philo->forks[g_philo->nb_philo]));
-		pthread_mutex_lock(&(g_philo->forks[id_philo - 1]));
-		print_msg(id_philo, MSG_FORK);
-		pthread_mutex_lock(&(g_philo->forks[id_philo % g_philo->nb_philo]));
-		pthread_mutex_unlock(&(g_philo->forks[g_philo->nb_philo]));
-		print_msg(id_philo, MSG_FORK);
-		print_msg(id_philo, MSG_EAT);
-		usleep(g_philo->time_to_eat);
-		gettimeofday(&(g_philo->last_eaten[id_philo - 1]), NULL);
-		g_philo->has_eaten[id_philo - 1]++;
-		pthread_mutex_unlock(&(g_philo->forks[id_philo % g_philo->nb_philo]));
-		pthread_mutex_unlock(&(g_philo->forks[id_philo - 1]));
-		print_msg(id_philo, MSG_SLEEP);
-		usleep(g_philo->time_to_sleep);
-		print_msg(id_philo, MSG_THINK);
-	}
-	return (SUCCESS);
+	if (g_philo->nb_must_eat == -1)
+		return ;
+	if (philo->nb_meal < g_philo->nb_must_eat)
+		return ;
+	pthread_mutex_lock(g_philo->print);
+	print_msg(philo->id, MSG_ENDED);
+	pthread_mutex_unlock(g_philo->print);
+	pthread_mutex_lock(g_philo->meals);
+	g_philo->finished++;
+	pthread_mutex_unlock(g_philo->meals);
+	philo->status = 0;
 }
 
-int		launch_thread(void)
+void	*watcher_loop(void *arg)
 {
-	int		index[g_philo->nb_philo + 1];
-	int		i;
-	void	*ptr;
-	int		res;
+	t_data	*philo;
 
-	if (gettimeofday((g_philo)->time_start, NULL))
-		return (FAILED);
-	i = 0;
-	ptr = &(index[g_philo->nb_philo]);
-	if (pthread_create(&(g_philo->threads[g_philo->nb_philo]),
-		NULL, &checker, ptr))
-		return (FAILED);
-	while (i < g_philo->nb_philo)
+	philo = arg;
+	while (philo->status)
 	{
-		index[i] = i + 1;
-		if ((res = pthread_create(&(g_philo->threads[i]),
-			NULL, &routine, (void*)&index[i])))
-			return (FAILED);
-		++i;
+		report_meal(philo);
+		report_corpse(philo);
 	}
-	pthread_join(g_philo->threads[g_philo->nb_philo], &ptr);
-	thread_cancel();
-	return (SUCCESS);
+	return (NULL);
 }
