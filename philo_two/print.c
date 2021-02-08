@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 15:28:31 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 12:53:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	print_msg(int id, int msg)
 		strcpy(str, "is thinking");
 	else if (msg == MSG_DIED)
 		strcpy(str, "died");
-	sem_wait(g_philo->print);
-	if (!g_philo->status || msg == MSG_DIED)
-		printf("%d %d %s\n", get_timestamp(&time), id, str);
-	sem_post(g_philo->print);
+	else if (msg == MSG_ENDED)
+		strcpy(str, "finished");
+	if (g_philo->status)
+		printf("%d %d %s\n", get_timestamp(&time), id + 1, str);
 }

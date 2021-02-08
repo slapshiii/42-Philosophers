@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 15:26:04 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 12:50:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,19 @@
 
 # define SEM_LOCK "sem_lock"
 # define SEM_FORK "sem_fork"
-# define SEM_PRINT "sem_print"
+# define SEM_DEAD "sem_dead"
+# define SEM_MEAL "sem_meal"
+# define SEM_MSGS "sem_msgs"
+
+typedef struct	s_data
+{
+	int				status;
+	int				nb_meal;
+	int				id;
+	struct timeval	last_meal;
+	pthread_t		monitor;
+	pthread_t		main;
+}				t_data;
 
 typedef struct	s_philo
 {
@@ -54,13 +66,12 @@ typedef struct	s_philo
 	int				time_to_sleep;
 	int				nb_must_eat;
 	int				status;
-	int				*has_eaten;
-	struct timeval	*time_start;
 	sem_t			*forks;
 	sem_t			*lock;
+	sem_t			*meals;
+	sem_t			*corpse;
 	sem_t			*print;
-	pthread_t		*threads;
-	struct timeval	*last_eaten;
+	t_data			**philo;
 }				t_philo;
 
 t_philo			*g_philo;
@@ -69,11 +80,18 @@ int				get_param(char **av);
 
 int				clean_exit(int status);
 
-void			*checker(void *arg);
-void			*routine(void *i);
-int				is_dead(void);
-int				thread_cancel(void);
-int				launch_thread(void);
+void			*watch_dead(void *arg);
+void			*watch_meal(void *arg);
+void			report_corpse(t_data *philo);
+void			report_meal(t_data *philo);
+void			*watcher_loop(void *arg);
+void			launch_thread(void);
+
+t_data			*data_philo(int i);
+void			*philo_monitor(void *arg);
+void			philo_fork(t_data *philo);
+void			philo_eat(t_data *philo);
+void			philo_rest(t_data *philo);
 
 void			print_msg(int id, int msg);
 
