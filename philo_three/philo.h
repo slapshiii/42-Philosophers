@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 18:05:15 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 12:08:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nb_must_eat;
-	int 			status;
+	int				status;
 	sem_t			*forks;
 	sem_t			*lock;
 	sem_t			*meals;

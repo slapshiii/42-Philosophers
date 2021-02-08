@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 18:17:08 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 12:11:15 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,17 @@ void	report_corpse(int i)
 	struct timeval	time;
 	int				diff;
 	int				time_i;
-	int 			time_p;
+	int				time_p;
 
 	gettimeofday(&time, NULL);
 	time_i = get_timestamp(&time);
-	time_p = get_timestamp(&g_philo->philo[i]->last_meal); 
+	time_p = get_timestamp(&g_philo->philo[i]->last_meal);
 	diff = time_i - time_p;
 	if (diff > g_philo->time_to_die)
 	{
 		sem_wait(g_philo->print);
 		print_msg(i, MSG_DIED);
 		g_philo->status = 0;
-		//sem_post(g_philo->print);
 		sem_post(g_philo->corpse);
 		g_philo->philo[i]->status = 0;
 	}
@@ -51,7 +50,7 @@ void	*watch_meal(void *arg)
 		sem_wait(g_philo->meals);
 		eaten++;
 		if (eaten == g_philo->nb_philo)
-			break;
+			break ;
 	}
 	g_philo->status = 0;
 	return (arg);
@@ -60,9 +59,9 @@ void	*watch_meal(void *arg)
 void	report_meal(int i)
 {
 	if (g_philo->nb_must_eat == -1)
-		return;
+		return ;
 	if (g_philo->philo[i]->nb_meal < g_philo->nb_must_eat)
-		return;
+		return ;
 	sem_wait(g_philo->print);
 	print_msg(i, MSG_ENDED);
 	sem_post(g_philo->print);
@@ -86,30 +85,4 @@ void	make_philo(int i)
 		}
 		exit(0);
 	}
-}
-
-void	launch_thread(void)
-{
-	int			i;
-	pthread_t	monitor_dead;
-	pthread_t	monitor_meal;
-
-	i = 0;
-	g_philo->status = 1;
-	while (i < g_philo->nb_philo)
-		make_philo(i++);
-	pthread_create(&monitor_dead, NULL, watch_dead, NULL);
-	pthread_create(&monitor_meal, NULL, watch_meal, NULL);
-	while (g_philo->status)
-		;
-	i = 0;
-	while (i < g_philo->nb_philo)
-	{
-		kill(g_philo->philo[i]->pid, SIGKILL);
-		sem_post(g_philo->meals);
-		i++;
-	}
-	sem_post(g_philo->corpse);
-	pthread_join(monitor_meal, NULL);
-	pthread_join(monitor_dead, NULL);
 }

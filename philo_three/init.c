@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 18:14:52 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 12:08:17 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int			get_param(char **av)
 	while (++i < g_philo->nb_philo)
 	{
 		if (!(g_philo->philo[i] = data_philo(i)))
-			return(ERR_MALLOC);
+			return (ERR_MALLOC);
 	}
 	if (init_philo())
 		return (ERR_INIT_MUTEX);
