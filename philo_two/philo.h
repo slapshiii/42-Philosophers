@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:50:33 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 16:16:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 
-# define MIN_EAT 0
+# define MIN_EAT 1
 
 # define SUCCESS 0
 # define FAILED -1

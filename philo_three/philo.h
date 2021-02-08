@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:08:02 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 16:16:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 
-# define MIN_EAT 0
+# define MIN_EAT 1
 
 # define SUCCESS 0
 # define FAILED -1
