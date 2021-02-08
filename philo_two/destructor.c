@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:29 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:51:50 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 14:45:33 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@ int	clean_exit(int status)
 		sem_close(g_philo->meals);
 		sem_close(g_philo->corpse);
 		sem_close(g_philo->print);
-		while (++i < g_philo->nb_philo)
+		if (g_philo->philo)
 		{
-			free(g_philo->philo[i]);
+			while (++i < g_philo->nb_philo)
+				free(g_philo->philo[i]);
+			free(g_philo->philo);
 		}
-		free(g_philo->philo);
 		free(g_philo);
 	}
 	g_philo = NULL;
