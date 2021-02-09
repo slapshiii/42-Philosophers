@@ -6,18 +6,11 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 14:33:28 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:48:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	*watch_dead(void *arg)
-{
-	sem_wait(g_philo->corpse);
-	g_philo->status = 0;
-	return (arg);
-}
 
 void	report_corpse(t_data *philo)
 {
@@ -36,25 +29,8 @@ void	report_corpse(t_data *philo)
 		print_msg(philo->id, MSG_DIED);
 		g_philo->status = 0;
 		sem_post(g_philo->print);
-		sem_post(g_philo->corpse);
 		philo->status = 0;
 	}
-}
-
-void	*watch_meal(void *arg)
-{
-	int	eaten;
-
-	eaten = 0;
-	while (g_philo->status)
-	{
-		sem_wait(g_philo->meals);
-		eaten++;
-		if (eaten == g_philo->nb_philo)
-			break ;
-	}
-	g_philo->status = 0;
-	return (arg);
 }
 
 void	report_meal(t_data *philo)
@@ -63,11 +39,15 @@ void	report_meal(t_data *philo)
 		return ;
 	if (philo->nb_meal < g_philo->nb_must_eat)
 		return ;
+	sem_wait(g_philo->meals);
+	g_philo->finished++;
+	philo->status = 0;
+	sem_post(g_philo->meals);
 	sem_wait(g_philo->print);
 	print_msg(philo->id, MSG_ENDED);
+	if (g_philo->finished == g_philo->nb_philo)
+		g_philo->status = 0;
 	sem_post(g_philo->print);
-	sem_post(g_philo->meals);
-	philo->status = 0;
 }
 
 void	*watcher_loop(void *arg)

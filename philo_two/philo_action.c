@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 14:31:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:52:12 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,8 @@ void	*philo_monitor(void *arg)
 	while (philo->status)
 	{
 		philo_fork(philo);
-		if (philo->status)
-			philo_eat(philo);
-		if (philo->status)
-			philo_rest(philo);
+		philo_eat(philo);
+		philo_rest(philo);
 	}
 	return (NULL);
 }

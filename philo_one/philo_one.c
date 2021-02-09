@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 16:07:04 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:32:29 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,21 @@ void	report_corpse(t_data *philo)
 	}
 }
 
-void	*watch_meal(void *arg)
-{
-	int	eaten;
-
-	eaten = 0;
-	while (g_philo->status)
-	{
-		if (g_philo->finished == g_philo->nb_philo)
-			break ;
-	}
-	g_philo->status = 0;
-	return (arg);
-}
-
 void	report_meal(t_data *philo)
 {
 	if (g_philo->nb_must_eat == -1)
 		return ;
 	if (philo->nb_meal < g_philo->nb_must_eat)
 		return ;
-	pthread_mutex_lock(g_philo->print);
-	print_msg(philo->id, MSG_ENDED);
-	pthread_mutex_unlock(g_philo->print);
 	pthread_mutex_lock(g_philo->meals);
 	g_philo->finished++;
-	pthread_mutex_unlock(g_philo->meals);
 	philo->status = 0;
+	pthread_mutex_unlock(g_philo->meals);
+	pthread_mutex_lock(g_philo->print);
+	print_msg(philo->id, MSG_ENDED);
+	if (g_philo->finished == g_philo->nb_philo)
+		g_philo->status = 0;
+	pthread_mutex_unlock(g_philo->print);
 }
 
 void	*watcher_loop(void *arg)

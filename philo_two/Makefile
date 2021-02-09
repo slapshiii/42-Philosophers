@@ -6,13 +6,13 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/01 15:39:10 by user42            #+#    #+#              #
-#    Updated: 2021/02/08 14:36:23 by user42           ###   ########.fr        #
+#    Updated: 2021/02/09 13:00:55 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_two
 
-CFLAGS	= -Werror -Wextra -Wall -g3 -I.
+CFLAGS	= -Werror -Wextra -Wall -I.
 #CFLAGS	+= -fsanitize=thread
 
 ifeq ("$(UNAME)", Darwin)
@@ -27,7 +27,8 @@ SRCS = 	main.c \
 		init.c \
 		destructor.c \
 		print.c \
-		lib.c
+		lib.c \
+		lib2.c
 
 OBJS = $(SRCS:%.c=%.o)
 

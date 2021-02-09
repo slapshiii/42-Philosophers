@@ -6,30 +6,53 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/05 17:41:19 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 13:08:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_msg(int id, int msg)
+static void	compose_msg(char *res, char *time, char *id, char *code)
+{
+	int	i;
+
+	i = 0;
+	while (*time)
+		res[i++] = *(time++);
+	res[i++] = ' ';
+	while (*id)
+		res[i++] = *(id++);
+	res[i++] = ' ';
+	while (*code)
+		res[i++] = *(code++);
+	res[i++] = '\n';
+}
+
+void		print_msg(int id, int msg)
 {
 	struct timeval	time;
 	char			str[50];
+	int				timestamp;
+	char			char_time[12];
+	char			char_id[12];
 
 	gettimeofday(&time, NULL);
+	memset(str, 0, sizeof(str));
+	timestamp = get_timestamp(&time);
+	ft_itoa_dec(timestamp, char_time);
+	ft_itoa_dec(id + 1, char_id);
 	if (msg == MSG_FORK)
-		strcpy(str, "has taken a fork");
+		compose_msg(str, char_time, char_id, "has taken a fork");
 	else if (msg == MSG_EAT)
-		strcpy(str, "is eating");
+		compose_msg(str, char_time, char_id, "is eating");
 	else if (msg == MSG_SLEEP)
-		strcpy(str, "is sleeping");
+		compose_msg(str, char_time, char_id, "is sleeping");
 	else if (msg == MSG_THINK)
-		strcpy(str, "is thinking");
+		compose_msg(str, char_time, char_id, "is thinking");
 	else if (msg == MSG_DIED)
-		strcpy(str, "died");
+		compose_msg(str, char_time, char_id, "died");
 	else if (msg == MSG_ENDED)
-		strcpy(str, "finished");
+		compose_msg(str, char_time, char_id, "finished");
 	if (g_philo->status)
-		printf("%d %d %s\n", get_timestamp(&time), id + 1, str);
+		write(1, str, ft_strlen(str));
 }

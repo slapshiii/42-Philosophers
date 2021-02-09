@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:28:24 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 13:23:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	launch_thread(void)
 	while (i < g_philo->nb_philo)
 	{
 		kill(g_philo->philo[i]->pid, SIGKILL);
-		sem_post(g_philo->meals);
 		i++;
 	}
 	sem_post(g_philo->corpse);
+	sem_post(g_philo->meals);
 	pthread_join(monitor_meal, NULL);
 	pthread_join(monitor_dead, NULL);
 }

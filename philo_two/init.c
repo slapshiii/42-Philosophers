@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:31:25 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:54:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	init_param(char **av)
 	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
 		return (FAILED);
 	memset(g_philo, 0, sizeof(t_philo));
-	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 1)
+	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 2)
 		return (ERR_NUM_PHILO);
 	if (((g_philo)->time_to_die = ft_atoi(av[2])) < 1)
 		return (ERR_TIME);
@@ -42,13 +42,9 @@ static int	init_philo(void)
 	if ((g_philo->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
 		0660, (g_philo->nb_philo) >> 1)) == SEM_FAILED)
 		return (FAILED);
-	sem_unlink(SEM_DEAD);
-	if ((g_philo->corpse = sem_open(SEM_DEAD, O_CREAT | O_EXCL,
-		0660, 0)) == SEM_FAILED)
-		return (FAILED);
 	sem_unlink(SEM_MEAL);
 	if ((g_philo->meals = sem_open(SEM_MEAL, O_CREAT | O_EXCL,
-		0660, 0)) == SEM_FAILED)
+		0660, 1)) == SEM_FAILED)
 		return (FAILED);
 	sem_unlink(SEM_MSGS);
 	if ((g_philo->print = sem_open(SEM_MSGS, O_CREAT | O_EXCL,

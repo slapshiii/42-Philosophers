@@ -6,23 +6,22 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
-/*   Updated: 2021/02/02 12:24:12 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/08 21:21:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-char	*ft_strcat(char *dest, char *srcs)
+char	*ft_strcat(char *dest, const char *srcs)
 {
-	while (dest && *dest)
-		dest++;
-	while (srcs && *srcs)
-	{
-		*dest = *srcs;
-		dest++;
-		srcs++;
-	}
-	*dest = '\0';
+	size_t	i;
+	char	*s;
+
+	i = ft_strlen(dest);
+	s = (char *)srcs;
+	while (s && *s)
+		dest[i++] = *(s++);
+	dest[i] = '\0';
 	return (dest);
 }
 
@@ -57,29 +56,29 @@ int		ft_atoi(const char *s)
 	return (res * (-sig));
 }
 
-char	*ft_itoa_dec(int num)
+char	*ft_itoa_dec(int num, char *res)
 {
-	char	buf[11];
-	char	*res;
+	int		i;
 	int		sig;
 
 	sig = 0;
-	res = &buf[sizeof(buf) - 1];
-	*res = '\0';
+	i = 0;
+	memset(res, 0, sizeof(char) * 12);
 	if (num < 0)
 	{
 		++sig;
 		num *= -1;
 	}
-	*--res = '0' + (num % 10);
+	res[i++] = '0' + (num % 10);
 	num /= 10;
 	while (num != 0)
 	{
-		*--res = '0' + (num % 10);
+		res[i++] = '0' + (num % 10);
 		num /= 10;
 	}
 	if (sig)
-		*--res = '-';
+		res[i] = '-';
+	reverse(res, i - 1);
 	return (res);
 }
 

@@ -6,13 +6,13 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/01 15:39:10 by user42            #+#    #+#              #
-#    Updated: 2021/02/05 18:20:36 by user42           ###   ########.fr        #
+#    Updated: 2021/02/09 13:44:35 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_three
 
-CFLAGS	= -Werror -Wextra -Wall -g3 -I.
+CFLAGS	= -Werror -Wextra -Wall -I.
 #CFLAGS	+= -fsanitize=thread
 #CFLAGS	+= -fsanitize=address
 
@@ -28,7 +28,8 @@ SRCS = 	main.c \
 		init.c \
 		destructor.c \
 		print.c \
-		lib.c
+		lib.c \
+		lib2.c
 
 OBJS = $(SRCS:%.c=%.o)
 

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:08:17 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:36:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	init_param(char **av)
 	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
 		return (FAILED);
 	memset(g_philo, 0, sizeof(t_philo));
-	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 1)
+	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 2)
 		return (ERR_NUM_PHILO);
 	if (((g_philo)->time_to_die = ft_atoi(av[2])) < 1)
 		return (ERR_TIME);

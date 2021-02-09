@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 16:16:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 13:08:06 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void			*watch_dead(void *arg);
 void			*watch_meal(void *arg);
 void			report_corpse(int i);
 void			report_meal(int i);
+void			make_philo(int i);
 void			launch_thread(void);
 
 t_data			*data_philo(int i);
@@ -97,9 +98,12 @@ void			philo_rest(t_data *philo);
 void			print_msg(int id, int msg);
 
 char			*ft_strcat(char *dest, char *srcs);
+char			*ft_strcpy(char *dest, const char *srcs);
+size_t			ft_strlen(char *str);
 int				get_timestamp(struct timeval *time);
 int				is_whitespace(char c);
 int				ft_atoi(const char *s);
-char			*ft_itoa_dec(int num);
+char			*ft_itoa_dec(int num, char *res);
+char			*reverse(char *str, int len);
 
 #endif

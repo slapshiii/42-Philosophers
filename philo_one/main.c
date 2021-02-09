@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 16:08:30 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 12:32:55 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,11 @@ void	make_philo(int i)
 void	launch_thread(void)
 {
 	int			i;
-	pthread_t	monitor_meal;
 
 	i = 0;
 	g_philo->status = 1;
 	while (i < g_philo->nb_philo)
 		make_philo(i++);
-	pthread_create(&monitor_meal, NULL, watch_meal, NULL);
 	while (g_philo->status)
 		;
 	i = 0;
@@ -42,7 +40,6 @@ void	launch_thread(void)
 		pthread_join(g_philo->philo[i]->main, NULL);
 		i++;
 	}
-	pthread_join(monitor_meal, NULL);
 }
 
 /*

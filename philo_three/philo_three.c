@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 12:11:15 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/09 13:38:09 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ void	report_corpse(int i)
 		sem_wait(g_philo->print);
 		print_msg(i, MSG_DIED);
 		g_philo->status = 0;
-		sem_post(g_philo->corpse);
 		g_philo->philo[i]->status = 0;
+		sem_post(g_philo->corpse);
+		sem_post(g_philo->print);
 	}
 }
 
@@ -50,9 +51,8 @@ void	*watch_meal(void *arg)
 		sem_wait(g_philo->meals);
 		eaten++;
 		if (eaten == g_philo->nb_philo)
-			break ;
+			g_philo->status = 0;
 	}
-	g_philo->status = 0;
 	return (arg);
 }
 
@@ -63,10 +63,11 @@ void	report_meal(int i)
 	if (g_philo->philo[i]->nb_meal < g_philo->nb_must_eat)
 		return ;
 	sem_wait(g_philo->print);
-	print_msg(i, MSG_ENDED);
-	sem_post(g_philo->print);
-	sem_post(g_philo->meals);
 	g_philo->philo[i]->status = 0;
+	print_msg(i, MSG_ENDED);
+	g_philo->status = 0;
+	sem_post(g_philo->meals);
+	sem_post(g_philo->print);
 }
 
 void	make_philo(int i)
