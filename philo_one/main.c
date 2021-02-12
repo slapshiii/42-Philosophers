@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:32:55 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 08:12:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	make_philo(int i)
 {
 	pthread_create(&g_philo->philo[i]->monitor,
 		NULL, philo_monitor, g_philo->philo[i]);
-	pthread_create(&g_philo->philo[i]->main,
-		NULL, watcher_loop, g_philo->philo[i]);
 }
 
 void	launch_thread(void)
@@ -31,13 +29,17 @@ void	launch_thread(void)
 	while (i < g_philo->nb_philo)
 		make_philo(i++);
 	while (g_philo->status)
-		;
+	{
+		report_corpse();
+		if (g_philo->finished == g_philo->nb_philo)
+			g_philo->status = 0;
+		usleep(1);
+	}
 	i = 0;
 	while (i < g_philo->nb_philo)
 	{
 		g_philo->philo[i]->status = 0;
 		pthread_join(g_philo->philo[i]->monitor, NULL);
-		pthread_join(g_philo->philo[i]->main, NULL);
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 13:00:17 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 08:13:38 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void		print_msg(int id, int msg)
 		compose_msg(str, char_time, char_id, "died");
 	else if (msg == MSG_ENDED)
 		compose_msg(str, char_time, char_id, "finished");
+	pthread_mutex_lock(g_philo->print);
 	if (g_philo->status)
 		write(1, str, ft_strlen(str));
+	pthread_mutex_unlock(g_philo->print);
 }

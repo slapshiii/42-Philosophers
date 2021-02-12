@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:35:05 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 14:10:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static int	init_param(char **av)
 		return (ERR_NUM_PHILO);
 	if (((g_philo)->time_to_die = ft_atoi(av[2])) < 1)
 		return (ERR_TIME);
-	if (((g_philo)->time_to_eat = ft_atoi(av[3]) * 1000) < 1)
+	if (((g_philo)->time_to_eat = ft_atoi(av[3])) < 1)
 		return (ERR_TIME);
-	if (((g_philo)->time_to_sleep = ft_atoi(av[4]) * 1000) < 1)
+	if (((g_philo)->time_to_sleep = ft_atoi(av[4])) < 1)
 		return (ERR_TIME);
 	if (av[5] != NULL && ((g_philo)->nb_must_eat = ft_atoi(av[5])) < MIN_EAT)
 		return (ERR_NUM_PHILO);

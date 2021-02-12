@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:32:46 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 14:12:53 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct	s_data
 	int				status;
 	int				nb_meal;
 	int				id;
+	int				is_eating;
 	struct timeval	last_meal;
 	pthread_t		monitor;
 	pthread_t		main;
@@ -72,8 +73,8 @@ int				get_param(char **av);
 
 int				clean_exit(int status);
 
-void			report_corpse(t_data *philo);
-void			report_meal(t_data *philo);
+void			report_corpse(void);
+void			report_meal(void);
 void			*watcher_loop(void *arg);
 void			launch_thread(void);
 
