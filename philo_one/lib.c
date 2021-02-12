@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 21:21:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 20:25:44 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,6 @@ int		get_timestamp(struct timeval *time)
 {
 	int res;
 
-	res = time->tv_usec / 1000 + (time->tv_sec % 100000) * 1000;
+	res = ((time->tv_sec % 100000) * 1000) + (time->tv_usec / 1000);
 	return (res);
 }

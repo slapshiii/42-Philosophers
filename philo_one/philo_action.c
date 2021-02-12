@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 15:56:28 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 20:18:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	*philo_monitor(void *arg)
 		philo_eat(philo);
 		if (philo->status)
 			philo_rest(philo);
+		usleep(1);
 	}
 	return (NULL);
 }
@@ -68,8 +69,10 @@ void	philo_eat(t_data *philo)
 		print_msg(philo->id, MSG_ENDED);
 		g_philo->finished++;
 	}
-	usleep(g_philo->time_to_eat * 1000);
+	//usleep(g_philo->time_to_eat * 1000);
 	gettimeofday(&(philo->last_meal), NULL);
+	my_sleep(g_philo->time_to_eat);
+	//gettimeofday(&(philo->last_meal), NULL);
 	philo->is_eating = 0;
 	pthread_mutex_unlock(&g_philo->forks[philo->id]);
 	pthread_mutex_unlock(&g_philo->forks[(philo->id + 1) % g_philo->nb_philo]);
@@ -78,6 +81,7 @@ void	philo_eat(t_data *philo)
 void	philo_rest(t_data *philo)
 {
 	print_msg(philo->id, MSG_SLEEP);
-	usleep(g_philo->time_to_sleep * 1000);
+	//usleep(g_philo->time_to_sleep * 1000);
+	my_sleep(g_philo->time_to_sleep);
 	print_msg(philo->id, MSG_THINK);
 }

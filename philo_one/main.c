@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 15:39:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 20:18:42 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	launch_thread(void)
 		report_corpse();
 		if (g_philo->finished == g_philo->nb_philo)
 			g_philo->status = 0;
-		usleep(1000);
+		usleep(1);
 	}
 	i = 0;
 	while (i < g_philo->nb_philo)
