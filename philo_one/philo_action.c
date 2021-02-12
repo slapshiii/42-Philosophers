@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 14:59:28 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 15:56:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,4 @@ void	philo_rest(t_data *philo)
 	print_msg(philo->id, MSG_SLEEP);
 	usleep(g_philo->time_to_sleep * 1000);
 	print_msg(philo->id, MSG_THINK);
-	usleep(1000);
 }
