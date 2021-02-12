@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 14:13:52 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 14:59:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	philo_eat(t_data *philo)
 		print_msg(philo->id, MSG_ENDED);
 		g_philo->finished++;
 	}
-	gettimeofday(&(philo->last_meal), NULL);
 	usleep(g_philo->time_to_eat * 1000);
+	gettimeofday(&(philo->last_meal), NULL);
 	philo->is_eating = 0;
 	pthread_mutex_unlock(&g_philo->forks[philo->id]);
 	pthread_mutex_unlock(&g_philo->forks[(philo->id + 1) % g_philo->nb_philo]);
@@ -80,5 +80,5 @@ void	philo_rest(t_data *philo)
 	print_msg(philo->id, MSG_SLEEP);
 	usleep(g_philo->time_to_sleep * 1000);
 	print_msg(philo->id, MSG_THINK);
-	usleep((g_philo->time_to_die - (g_philo->time_to_eat + g_philo->time_to_sleep)) * 100);
+	usleep(1000);
 }

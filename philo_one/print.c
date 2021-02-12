@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 08:13:38 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 15:28:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	compose_msg(char *res, char *time, char *id, char *code)
 	res[i++] = '\n';
 }
 
-void		print_msg(int id, int msg)
+void		print_msg(int id, char *msg)
 {
 	struct timeval	time;
 	char			str[50];
@@ -36,25 +36,15 @@ void		print_msg(int id, int msg)
 	char			char_time[12];
 	char			char_id[12];
 
+	if (!g_philo->status)
+		return ;
 	gettimeofday(&time, NULL);
 	memset(str, 0, sizeof(str));
 	timestamp = get_timestamp(&time);
 	ft_itoa_dec(timestamp, char_time);
 	ft_itoa_dec(id + 1, char_id);
-	if (msg == MSG_FORK)
-		compose_msg(str, char_time, char_id, "has taken a fork");
-	else if (msg == MSG_EAT)
-		compose_msg(str, char_time, char_id, "is eating");
-	else if (msg == MSG_SLEEP)
-		compose_msg(str, char_time, char_id, "is sleeping");
-	else if (msg == MSG_THINK)
-		compose_msg(str, char_time, char_id, "is thinking");
-	else if (msg == MSG_DIED)
-		compose_msg(str, char_time, char_id, "died");
-	else if (msg == MSG_ENDED)
-		compose_msg(str, char_time, char_id, "finished");
+	compose_msg(str, char_time, char_id, msg);
 	pthread_mutex_lock(g_philo->print);
-	if (g_philo->status)
-		write(1, str, ft_strlen(str));
+	write(1, str, ft_strlen(str));
 	pthread_mutex_unlock(g_philo->print);
 }

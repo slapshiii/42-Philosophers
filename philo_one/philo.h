@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 14:12:53 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/12 15:27:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@
 # define ERR_INIT 5
 # define ERR_INIT_MUTEX 6
 
-# define MSG_FORK 0
-# define MSG_EAT 1
-# define MSG_SLEEP 2
-# define MSG_THINK 3
-# define MSG_DIED 4
-# define MSG_ENDED 5
+# define MSG_FORK "has taken a fork"
+# define MSG_EAT "is eating"
+# define MSG_SLEEP "is sleeping"
+# define MSG_THINK "is thinking"
+# define MSG_DIED "died"
+# define MSG_ENDED "finished"
 
 typedef struct	s_data
 {
@@ -84,7 +84,7 @@ void			philo_fork(t_data *philo);
 void			philo_eat(t_data *philo);
 void			philo_rest(t_data *philo);
 
-void			print_msg(int id, int msg);
+void			print_msg(int id, char *msg);
 
 char			*ft_strcat(char *dest, const char *srcs);
 char			*ft_strcpy(char *dest, const char *srcs);
