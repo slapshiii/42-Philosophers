@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 14:31:37 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 15:04:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,13 @@ void		*checker(void *arg)
 		while (i < ph[0].data->nb_philo && ph[0].data->status != ENDED &&
 		ph[0].data->status != DIED)
 		{
-			if (ph[i].eaten >= ph[0].data->nb_must_eat)
-			{
+			if (ph[i].eaten >= ph[0].data->nb_must_eat
+				&& ph[0].data->nb_must_eat != -1)
 				total++;
-				if (total == ph[0].data->nb_philo)
-					print_end(ph, i);
-			}
 			i++;
 		}
+		if (total == ph[0].data->nb_philo)
+			print_end(ph, i);
 		usleep(1);
 	}
 	return (NULL);
