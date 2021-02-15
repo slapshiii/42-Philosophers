@@ -6,34 +6,55 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 20:14:12 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:35:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	report_corpse(void)
+void	*checker(void *arg)
 {
-	struct timeval	time;
-	int				diff;
-	int				time_i;
-	int				time_p;
-	int				i;
+	t_data	*ph;
+	int		i;
 
-	i = 0;
-	while (i < g_philo->nb_philo)
+	ph = (t_data*)arg;
+	while (42 && ph[0].data->status != ENDED && ph[0].data->status != DIED)
 	{
-		gettimeofday(&time, NULL);
-		time_i = get_timestamp(&time);
-		time_p = get_timestamp(&g_philo->philo[i]->last_meal);
-		diff = time_i - time_p;
-		if (diff > g_philo->time_to_die)
-		//if (!g_philo->philo[i]->is_eating && diff > g_philo->time_to_die)
+		i = 0;
+		while (i < ph[0].data->nb_philo && ph[0].data->status != ENDED &&
+		ph[0].data->status != DIED)
 		{
-			print_msg(g_philo->philo[i]->id, MSG_DIED);
-			g_philo->status = 0;
-			g_philo->philo[i]->status = 0;
+			if (ph[i].data->nb_must_eat ==
+			(ph[0].data->nb_philo * ph[0].data->nb_must_eat))
+			{
+				pthread_mutex_lock(&ph[i].data->print);
+				printf("All philosophers have eaten\n");
+				pthread_mutex_lock(&ph[i].data->state);
+				ph[i].data->status = ENDED;
+				pthread_mutex_unlock(&ph[i].data->state);
+				pthread_mutex_unlock(&ph[i].data->print);
+			}
+			i++;
 		}
-		i++;
 	}
+	return (NULL);
+}
+
+void	*report_corpse(void *arg)
+{
+	t_data	*ph;
+
+	ph = (t_data*)arg;
+	while (42 && ph->data->status != DIED && ph->data->status != ENDED)
+	{
+		if (get_timestamp() - ph->last_meal > ph->data->time_to_die)
+		{
+			print_msg(ph, MSG_DIED);
+			pthread_mutex_lock(&ph->data->state);
+			ph->data->status = DIED;
+			pthread_mutex_unlock(&ph->data->state);
+			break ;
+		}
+	}
+	return (NULL);
 }

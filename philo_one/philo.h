@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 18:05:39 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:28:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,16 @@
 # define ERR_INIT 5
 # define ERR_INIT_MUTEX 6
 
-# define MSG_FORK "has taken a fork"
-# define MSG_EAT "is eating"
-# define MSG_SLEEP "is sleeping"
-# define MSG_THINK "is thinking"
-# define MSG_DIED "died"
-# define MSG_ENDED "finished"
+# define RUNNING 0
+# define ENDED 1
+# define DIED 2
 
-typedef struct	s_data
-{
-	int				status;
-	int				nb_meal;
-	int				id;
-	int				is_eating;
-	struct timeval	last_meal;
-	pthread_t		monitor;
-	pthread_t		main;
-}				t_data;
+# define MSG_FORK " has taken a fork\n"
+# define MSG_EAT " is eating\n"
+# define MSG_SLEEP " is sleeping\n"
+# define MSG_THINK " is thinking\n"
+# define MSG_DIED " died\n"
+# define MSG_ENDED " finished\n"
 
 typedef struct	s_philo
 {
@@ -61,35 +54,41 @@ typedef struct	s_philo
 	int				nb_must_eat;
 	int				status;
 	int				finished;
-	pthread_mutex_t	*meals;
-	pthread_mutex_t	*print;
+	pthread_mutex_t	meals;
+	pthread_mutex_t	print;
 	pthread_mutex_t	*forks;
-	t_data			**philo;
+	pthread_mutex_t	state;
 }				t_philo;
 
-t_philo			*g_philo;
+typedef struct	s_data
+{
+	pthread_mutex_t	*f_fork;
+	pthread_mutex_t	*s_fork;
+	t_philo			*data;
+	int				id;
+	long			last_meal;
+	pthread_t		monitor;
+}				t_data;
 
-int				get_param(char **av);
+int				get_param(char **av, t_philo *data);
 
-int				clean_exit(int status);
+int				clean_exit(t_philo *data, t_data *philo);
 
-void			report_corpse(void);
-void			report_meal(void);
-void			*watcher_loop(void *arg);
-void			launch_thread(void);
+void			*report_corpse(void *arg);
+void			launch_thread(t_philo *data, t_data *philo);
 
-t_data			*data_philo(int i);
+void			*checker(void *arg);
 void			*philo_monitor(void *arg);
 void			philo_fork(t_data *philo);
 void			philo_eat(t_data *philo);
 void			philo_rest(t_data *philo);
 
-void			print_msg(int id, char *msg);
+void			print_msg(t_data *philo, char *msg);
 
 char			*ft_strcat(char *dest, const char *srcs);
 char			*ft_strcpy(char *dest, const char *srcs);
 size_t			ft_strlen(char *str);
-int				get_timestamp(struct timeval *time);
+long			get_timestamp(void);
 int				is_whitespace(char c);
 int				ft_atoi(const char *s);
 char			*ft_itoa_dec(int num, char *res);

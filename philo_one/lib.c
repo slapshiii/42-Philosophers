@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 20:25:44 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/14 14:40:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ char	*ft_itoa_dec(int num, char *res)
 	return (res);
 }
 
-int		get_timestamp(struct timeval *time)
+long	get_timestamp(void)
 {
-	int res;
+	struct timeval	time;
 
-	res = ((time->tv_sec % 100000) * 1000) + (time->tv_usec / 1000);
-	return (res);
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000L + time.tv_usec / 1000L);
 }

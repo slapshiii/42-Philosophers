@@ -6,42 +6,56 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 20:18:42 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:25:03 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philo *g_philo;
-
-void	make_philo(int i)
+static t_data	*init_thread(t_philo *data)
 {
-	pthread_create(&g_philo->philo[i]->monitor,
-		NULL, philo_monitor, g_philo->philo[i]);
+	t_data	*res;
+	int		i;
+
+	i = 0;
+	if (!(res = (t_data*)malloc(sizeof(t_data) * data->nb_philo)))
+		return (NULL);
+	while (i < data->nb_philo)
+	{
+		res[i].id = i + 1;
+		res[i].data = data;
+		res[i].f_fork = &data->forks[i];
+		if (i == 0)
+			res[i].s_fork = &data->forks[data->nb_philo - 1];
+		else
+			res[i].s_fork = &data->forks[i - 1];
+		res[i].last_meal = get_timestamp();
+		i++;
+	}
+	return (res);
 }
 
-void	launch_thread(void)
+void	launch_thread(t_philo *data, t_data *philo)
 {
+	pthread_t	monitor;
 	int			i;
 
 	i = 0;
-	g_philo->status = 1;
-	while (i < g_philo->nb_philo)
-		make_philo(i++);
-	while (g_philo->status)
+	while (i < data->nb_philo)
 	{
-		report_corpse();
-		if (g_philo->finished == g_philo->nb_philo)
-			g_philo->status = 0;
-		usleep(1);
-	}
-	i = 0;
-	while (i < g_philo->nb_philo)
-	{
-		g_philo->philo[i]->status = 0;
-		pthread_join(g_philo->philo[i]->monitor, NULL);
+		if (pthread_create(&philo[i].monitor, NULL, philo_monitor, &philo[i]) < 0)
+		{
+			printf("thread create error\n");
+			return ;
+		}
+		usleep(20);
 		i++;
 	}
+	pthread_create(&monitor, NULL, &checker, (void *)philo);
+	pthread_detach(monitor);
+	i = 0;
+	while (i < data->nb_philo)
+		pthread_join(philo[i++].monitor, NULL);
 }
 
 /*
@@ -50,18 +64,22 @@ void	launch_thread(void)
 
 int		main(int ac, char **av)
 {
-	int				status;
-	int				i;
+	t_philo	data;
+	t_data	*philo;
 
-	status = 0;
-	i = 0;
+	philo = NULL;
 	if (ac < 5 || ac > 6)
 		return (ERR_NUM_ARG);
-	if ((status = get_param(av)))
+	else
 	{
-		fprintf(stderr, "An error has occured\n");
-		return (clean_exit(status));
+		if ((data.status = get_param(av, &data)))
+		{
+			fprintf(stderr, "An error has occured\n");
+			return (clean_exit(&data, philo));
+		}
+		philo = init_thread(&data);
+		launch_thread(&data, philo);
+		clean_exit(&data, philo);
 	}
-	launch_thread();
-	return (clean_exit(status));
+	return (0);
 }

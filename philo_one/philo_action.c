@@ -5,83 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 20:18:49 by user42           ###   ########.fr       */
+/*   Created: 2021/02/15 12:53:34 by user42            #+#    #+#             */
+/*   Updated: 2021/02/15 13:34:36 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_data	*data_philo(int i)
-{
-	t_data	*res;
-
-	if (!(res = (t_data*)malloc(sizeof(t_data))))
-		return (NULL);
-	memset(res, 0, sizeof(t_data));
-	res->id = i;
-	res->status = 1;
-	gettimeofday(&(res->last_meal), NULL);
-	return (res);
-}
-
 void	*philo_monitor(void *arg)
 {
-	t_data	*philo;
+	t_data		*philo;
+	pthread_t	monitor;
 
-	philo = arg;
-	while (philo->status)
+	philo = (t_data*)arg;
+	pthread_create(&monitor, NULL, &report_corpse, (void *)philo);
+	pthread_detach(monitor);
+	philo->last_meal = get_timestamp();
+	philo->id % 2 ? 0 : usleep(philo->data->time_to_eat * 1000);
+	while (42 && philo->data->status != DIED && philo->data->status != ENDED)
 	{
 		philo_fork(philo);
 		philo_eat(philo);
-		if (philo->status)
-			philo_rest(philo);
-		usleep(1);
+		philo_rest(philo);
 	}
 	return (NULL);
 }
 
 void	philo_fork(t_data *philo)
 {
-	if (philo->id % 2)
-		pthread_mutex_lock(&g_philo->forks[philo->id]);
-	else
-		pthread_mutex_lock(&g_philo->forks[(philo->id + 1)
-			% g_philo->nb_philo]);
-	print_msg(philo->id, MSG_FORK);
-	if (philo->id % 2)
-		pthread_mutex_lock(&g_philo->forks[(philo->id + 1)
-			% g_philo->nb_philo]);
-	else
-		pthread_mutex_lock(&g_philo->forks[philo->id]);
-	print_msg(philo->id, MSG_FORK);
+	pthread_mutex_lock(philo->f_fork);
+	print_msg(philo, MSG_FORK);
+	pthread_mutex_lock(philo->s_fork);
+	print_msg(philo, MSG_FORK);
 }
 
 void	philo_eat(t_data *philo)
 {
-	philo->nb_meal++;
-	philo->is_eating = 1;
-	print_msg(philo->id, MSG_EAT);
-	if (philo->nb_meal == g_philo->nb_must_eat
-		&& g_philo->nb_must_eat != -1)
-	{
-		philo->status = 0;
-		print_msg(philo->id, MSG_ENDED);
-		g_philo->finished++;
-	}
-	//usleep(g_philo->time_to_eat * 1000);
-	gettimeofday(&(philo->last_meal), NULL);
-	my_sleep(g_philo->time_to_eat);
-	//gettimeofday(&(philo->last_meal), NULL);
-	philo->is_eating = 0;
-	pthread_mutex_unlock(&g_philo->forks[philo->id]);
-	pthread_mutex_unlock(&g_philo->forks[(philo->id + 1) % g_philo->nb_philo]);
+	print_msg(philo, MSG_EAT);
+	philo->last_meal = get_timestamp();
+	usleep(philo->data->time_to_eat * 1000);
+	pthread_mutex_lock(&philo->data->meals);
+	philo->data->finished++;
+	pthread_mutex_unlock(&philo->data->meals);
+	pthread_mutex_unlock(philo->s_fork);
+	pthread_mutex_unlock(philo->f_fork);
 }
 
 void	philo_rest(t_data *philo)
 {
-	print_msg(philo->id, MSG_SLEEP);
-	//usleep(g_philo->time_to_sleep * 1000);
-	my_sleep(g_philo->time_to_sleep);
-	print_msg(philo->id, MSG_THINK);
+	print_msg(philo, MSG_SLEEP);
+	usleep(philo->data->time_to_sleep * 1000);
+	print_msg(philo, MSG_THINK);
 }

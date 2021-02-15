@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:18:56 by user42            #+#    #+#             */
-/*   Updated: 2021/02/12 18:14:45 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/14 14:55:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,15 @@ char	*reverse(char *str, int len)
 
 void	my_sleep(int time)
 {
-	struct timeval	temp;
-	int 			target;
-	int				now;
+	long 			target;
+	long			now;
 
 	now = 0;
-	gettimeofday(&temp, NULL);
-	target = get_timestamp(&temp);
+	target = get_timestamp();
 	target += time;
-	usleep((time - 20) * 1000);
-	while (now < target)
+	while (target > now)
 	{
 		usleep(1);
-		gettimeofday(&temp, NULL);
-		now = get_timestamp(&temp);
+		now = get_timestamp();
 	}
 }
