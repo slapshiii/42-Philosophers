@@ -6,13 +6,23 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 14:23:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 14:31:37 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*checker(void *arg)
+static void	print_end(t_data *philo, int i)
+{
+	pthread_mutex_lock(&philo[i].data->print);
+	printf("All philosophers have eaten\n");
+	pthread_mutex_lock(&philo[i].data->state);
+	philo[i].data->status = ENDED;
+	pthread_mutex_unlock(&philo[i].data->state);
+	pthread_mutex_unlock(&philo[i].data->print);
+}
+
+void		*checker(void *arg)
 {
 	t_data	*ph;
 	int		i;
@@ -30,14 +40,7 @@ void	*checker(void *arg)
 			{
 				total++;
 				if (total == ph[0].data->nb_philo)
-				{
-					pthread_mutex_lock(&ph[i].data->print);
-					printf("All philosophers have eaten\n");
-					pthread_mutex_lock(&ph[i].data->state);
-					ph[i].data->status = ENDED;
-					pthread_mutex_unlock(&ph[i].data->state);
-					pthread_mutex_unlock(&ph[i].data->print);
-				}
+					print_end(ph, i);
 			}
 			i++;
 		}
@@ -46,7 +49,7 @@ void	*checker(void *arg)
 	return (NULL);
 }
 
-void	*report_corpse(void *arg)
+void		*report_corpse(void *arg)
 {
 	t_data	*ph;
 

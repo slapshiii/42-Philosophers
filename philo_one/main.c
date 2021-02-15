@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 14:23:41 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 14:33:56 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static t_data	*init_thread(t_philo *data)
 	i = 0;
 	if (!(res = (t_data*)malloc(sizeof(t_data) * data->nb_philo)))
 		return (NULL);
-	memset(res, 0, sizeof(t_data));
+	memset(res, 0, sizeof(t_data) * data->nb_philo);
 	while (i < data->nb_philo)
 	{
 		res[i].id = i;
