@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:18:56 by user42            #+#    #+#             */
-/*   Updated: 2021/02/14 14:55:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 14:23:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*reverse(char *str, int len)
 
 void	my_sleep(int time)
 {
-	long 			target;
+	long			target;
 	long			now;
 
 	now = 0;

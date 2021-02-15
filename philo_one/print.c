@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 13:29:35 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 14:23:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ static size_t	get_size_num(int num)
 	return (len);
 }
 
-static void	ft_putstr(char *str)
+static void		ft_putstr(char *str)
 {
 	size_t	len;
 
-	len  = ft_strlen(str);
+	len = ft_strlen(str);
 	write(1, str, len);
 }
 
-static void	ft_putnbr(unsigned long n)
+static void		ft_putnbr(unsigned long n)
 {
 	char	line[11];
 	size_t	i;
@@ -59,7 +59,7 @@ static void	ft_putnbr(unsigned long n)
 	ft_putstr(line);
 }
 
-void		print_msg(t_data *philo, char *msg)
+void			print_msg(t_data *philo, char *msg)
 {
 	long	timestamp;
 

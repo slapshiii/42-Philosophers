@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 13:25:03 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 14:23:41 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ static t_data	*init_thread(t_philo *data)
 	i = 0;
 	if (!(res = (t_data*)malloc(sizeof(t_data) * data->nb_philo)))
 		return (NULL);
+	memset(res, 0, sizeof(t_data));
 	while (i < data->nb_philo)
 	{
-		res[i].id = i + 1;
+		res[i].id = i;
 		res[i].data = data;
 		res[i].f_fork = &data->forks[i];
 		if (i == 0)
@@ -35,7 +36,7 @@ static t_data	*init_thread(t_philo *data)
 	return (res);
 }
 
-void	launch_thread(t_philo *data, t_data *philo)
+void			launch_thread(t_philo *data, t_data *philo)
 {
 	pthread_t	monitor;
 	int			i;
@@ -43,7 +44,8 @@ void	launch_thread(t_philo *data, t_data *philo)
 	i = 0;
 	while (i < data->nb_philo)
 	{
-		if (pthread_create(&philo[i].monitor, NULL, philo_monitor, &philo[i]) < 0)
+		if (pthread_create(&philo[i].monitor, NULL,
+			philo_monitor, &philo[i]) < 0)
 		{
 			printf("thread create error\n");
 			return ;
@@ -62,7 +64,7 @@ void	launch_thread(t_philo *data, t_data *philo)
 **	nb_philo; time_to_die; time_to_eat; time_to_sleep; nb_must_eat
 */
 
-int		main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	t_philo	data;
 	t_data	*philo;
