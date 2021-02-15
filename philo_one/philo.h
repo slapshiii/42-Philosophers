@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 13:28:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:48:23 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct	s_data
 	pthread_mutex_t	*s_fork;
 	t_philo			*data;
 	int				id;
+	int				eaten;
 	long			last_meal;
 	pthread_t		monitor;
 }				t_data;

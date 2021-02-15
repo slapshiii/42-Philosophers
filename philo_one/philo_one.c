@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 13:35:49 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:50:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,32 @@ void	*checker(void *arg)
 {
 	t_data	*ph;
 	int		i;
+	int		total;
 
 	ph = (t_data*)arg;
 	while (42 && ph[0].data->status != ENDED && ph[0].data->status != DIED)
 	{
 		i = 0;
+		total = 0;
 		while (i < ph[0].data->nb_philo && ph[0].data->status != ENDED &&
 		ph[0].data->status != DIED)
 		{
-			if (ph[i].data->nb_must_eat ==
-			(ph[0].data->nb_philo * ph[0].data->nb_must_eat))
+			if (ph[i].eaten >= ph[0].data->nb_must_eat)
 			{
-				pthread_mutex_lock(&ph[i].data->print);
-				printf("All philosophers have eaten\n");
-				pthread_mutex_lock(&ph[i].data->state);
-				ph[i].data->status = ENDED;
-				pthread_mutex_unlock(&ph[i].data->state);
-				pthread_mutex_unlock(&ph[i].data->print);
+				total++;
+				if (total == ph[0].data->nb_philo)
+				{
+					pthread_mutex_lock(&ph[i].data->print);
+					printf("All philosophers have eaten\n");
+					pthread_mutex_lock(&ph[i].data->state);
+					ph[i].data->status = ENDED;
+					pthread_mutex_unlock(&ph[i].data->state);
+					pthread_mutex_unlock(&ph[i].data->print);
+				}
 			}
 			i++;
 		}
+		usleep(1);
 	}
 	return (NULL);
 }
@@ -55,6 +61,7 @@ void	*report_corpse(void *arg)
 			pthread_mutex_unlock(&ph->data->state);
 			break ;
 		}
+		usleep(1);
 	}
 	return (NULL);
 }
