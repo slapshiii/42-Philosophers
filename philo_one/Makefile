@@ -6,7 +6,7 @@
 #    By: user42 <user42@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/01 15:39:10 by user42            #+#    #+#              #
-#    Updated: 2021/02/15 14:34:46 by user42           ###   ########.fr        #
+#    Updated: 2021/02/15 15:38:35 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ CFLAGS	= -Werror -Wextra -Wall -I.
 #CFLAGS	+= -fsanitize=thread
 #CFLAGS	+= -fsanitize=address
 
-ifeq ("$(UNAME)", Darwin)
+UNAME = $(shell uname)
+ifeq ($(UNAME), Darwin)
 	CC		=	gcc
 else
 	CC		=	clang
