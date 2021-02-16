@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 12:53:34 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 15:43:32 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 16:37:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	philo_eat(t_data *philo)
 {
 	print_msg(philo, MSG_EAT);
 	philo->last_meal = get_timestamp();
-	usleep(philo->data->time_to_eat * 1000);
+	my_usleep(philo->data->time_to_eat);
 	pthread_mutex_lock(&philo->data->meals);
 	philo->data->finished++;
 	pthread_mutex_unlock(&philo->data->meals);
@@ -54,6 +54,6 @@ void	philo_eat(t_data *philo)
 void	philo_rest(t_data *philo)
 {
 	print_msg(philo, MSG_SLEEP);
-	usleep(philo->data->time_to_sleep * 1000);
+	my_usleep(philo->data->time_to_sleep);
 	print_msg(philo, MSG_THINK);
 }

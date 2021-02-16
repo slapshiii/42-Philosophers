@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:18:56 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 10:42:50 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 11:02:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,5 @@ void	my_usleep(int time, int id)
 	while (target > now)
 	{
 		now = get_timestamp();
-		//dprintf(2, "%ld-now %ld-target %d-id\n", now, target, id);
 	}
-	dprintf(2, "%ld-now [EXIT] %d-id\n", now, id);
 }
