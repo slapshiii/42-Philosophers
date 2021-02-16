@@ -6,84 +6,90 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 13:38:09 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 15:10:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*watch_dead(void *arg)
+static void	print_end(t_data *philo, int i)
 {
-	sem_wait(g_philo->corpse);
-	g_philo->status = 0;
-	return (arg);
+	sem_wait(philo[i].data->print);
+	printf("All philosophers have eaten\n");
+	sem_wait(philo[i].data->state);
+	philo[i].data->status = ENDED;
+	sem_post(philo[i].data->state);
+	sem_post(philo[i].data->print);
 }
 
-void	report_corpse(int i)
+void		*checker_dead(void *arg)
 {
-	struct timeval	time;
-	int				diff;
-	int				time_i;
-	int				time_p;
+	t_data	*ph;
+	int		i;
 
-	gettimeofday(&time, NULL);
-	time_i = get_timestamp(&time);
-	time_p = get_timestamp(&g_philo->philo[i]->last_meal);
-	diff = time_i - time_p;
-	if (diff > g_philo->time_to_die)
+	ph = (t_data*)arg;
+	i = 0;
+	sem_wait(ph->data->corpse);
+	if (ph->data->status != RUNNING)
+		return (NULL);
+	ph->data->status = DIED;
+	while(i < ph->data->nb_philo)
 	{
-		sem_wait(g_philo->print);
-		print_msg(i, MSG_DIED);
-		g_philo->status = 0;
-		g_philo->philo[i]->status = 0;
-		sem_post(g_philo->corpse);
-		sem_post(g_philo->print);
+		sem_post(ph->data->meals);
+		kill(ph[i].pid, SIGKILL);
+		i++;
 	}
+	return (NULL);
 }
 
-void	*watch_meal(void *arg)
+void		*checker_meal(void *arg)
 {
-	int	eaten;
+	t_data	*ph;
+	int		i;
 
-	eaten = 0;
-	while (g_philo->status)
+	ph = (t_data*)arg;
+	i = 0;
+	while (i < ph->data->nb_philo)
 	{
-		sem_wait(g_philo->meals);
-		eaten++;
-		if (eaten == g_philo->nb_philo)
-			g_philo->status = 0;
+		sem_wait(ph->data->meals);
+		i++;
 	}
-	return (arg);
-}
-
-void	report_meal(int i)
-{
-	if (g_philo->nb_must_eat == -1)
-		return ;
-	if (g_philo->philo[i]->nb_meal < g_philo->nb_must_eat)
-		return ;
-	sem_wait(g_philo->print);
-	g_philo->philo[i]->status = 0;
-	print_msg(i, MSG_ENDED);
-	g_philo->status = 0;
-	sem_post(g_philo->meals);
-	sem_post(g_philo->print);
-}
-
-void	make_philo(int i)
-{
-	if ((g_philo->philo[i]->pid = fork()) == -1)
-		exit(ERR_INIT);
-	if (g_philo->philo[i]->pid == 0)
+	if (ph->data->status != RUNNING)
+		return (NULL);
+	ph->data->status = ENDED;
+	sem_post(ph->data->corpse);
+	i = 0;
+	while (i < ph->data->nb_philo)
 	{
-		pthread_create(&g_philo->philo[i]->monitor,
-			NULL, philo_monitor, g_philo->philo[i]);
-		pthread_detach(g_philo->philo[i]->monitor);
-		while (g_philo->philo[i]->status)
+		kill(ph[i].pid, SIGKILL);
+		i++;
+	}
+	print_end(ph, 0);
+	return (NULL);
+}
+
+void		*report(void *arg)
+{
+	t_data	*ph;
+
+	ph = (t_data*)arg;
+	while (42 && !ph->status)
+	{
+		if (get_timestamp() - ph->last_meal > ph->data->time_to_die)
 		{
-			report_meal(i);
-			report_corpse(i);
+			print_msg(ph, MSG_DIED);
+			sem_post(ph->data->corpse);
+			ph->status = DIED;
+			break ;
 		}
-		exit(0);
+		if (ph->eaten >= ph->data->nb_must_eat)
+		{
+			print_msg(ph, MSG_ENDED);
+			sem_post(ph->data->meals);
+			ph->status = ENDED;
+			break ;
+		}
+		usleep(10);
 	}
+	return (NULL);
 }

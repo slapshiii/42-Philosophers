@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 09:45:59 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 11:11:31 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,6 @@ int				is_whitespace(char c);
 int				ft_atoi(const char *s);
 char			*ft_itoa_dec(int num, char *res);
 char			*reverse(char *str, int len);
-void			my_usleep(int time, int id);
+void			my_usleep(int time);
 
 #endif

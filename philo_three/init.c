@@ -6,73 +6,61 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:36:39 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 15:18:43 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	init_param(char **av)
+static int	init_param(char **av, t_philo *data)
 {
-	if (!(g_philo = (t_philo*)malloc(sizeof(t_philo))))
-		return (FAILED);
-	memset(g_philo, 0, sizeof(t_philo));
-	if (((g_philo)->nb_philo = ft_atoi(av[1])) < 2)
+	if (((data)->nb_philo = ft_atoi(av[1])) < 2)
 		return (ERR_NUM_PHILO);
-	if (((g_philo)->time_to_die = ft_atoi(av[2])) < 1)
+	if (((data)->time_to_die = ft_atoi(av[2])) < 1)
 		return (ERR_TIME);
-	if (((g_philo)->time_to_eat = ft_atoi(av[3]) * 1000) < 1)
+	if (((data)->time_to_eat = ft_atoi(av[3])) < 1)
 		return (ERR_TIME);
-	if (((g_philo)->time_to_sleep = ft_atoi(av[4]) * 1000) < 1)
+	if (((data)->time_to_sleep = ft_atoi(av[4])) < 1)
 		return (ERR_TIME);
-	if (av[5] != NULL && ((g_philo)->nb_must_eat = ft_atoi(av[5])) < MIN_EAT)
+	if (av[5] != NULL && ((data)->nb_must_eat = ft_atoi(av[5])) < MIN_EAT)
 		return (ERR_NUM_PHILO);
 	else if (av[5] == NULL)
-		(g_philo)->nb_must_eat = -1;
+		(data)->nb_must_eat = -1;
 	return (SUCCESS);
 }
 
-static int	init_philo(void)
+static int	init_sem(t_philo *data)
 {
 	sem_unlink(SEM_FORK);
-	if ((g_philo->forks = sem_open(SEM_FORK, O_CREAT | O_EXCL,
-		0660, g_philo->nb_philo)) == SEM_FAILED)
-		return (FAILED);
-	sem_unlink(SEM_LOCK);
-	if ((g_philo->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
-		0660, (g_philo->nb_philo) >> 1)) == SEM_FAILED)
-		return (FAILED);
-	sem_unlink(SEM_DEAD);
-	if ((g_philo->corpse = sem_open(SEM_DEAD, O_CREAT | O_EXCL,
-		0660, 0)) == SEM_FAILED)
-		return (FAILED);
-	sem_unlink(SEM_MEAL);
-	if ((g_philo->meals = sem_open(SEM_MEAL, O_CREAT | O_EXCL,
-		0660, 0)) == SEM_FAILED)
-		return (FAILED);
 	sem_unlink(SEM_MSGS);
-	if ((g_philo->print = sem_open(SEM_MSGS, O_CREAT | O_EXCL,
+	sem_unlink(SEM_MEAL);
+	sem_unlink(SEM_STAT);
+	sem_unlink(SEM_LOCK);
+	sem_unlink(SEM_DEAD);
+	if ((data->forks = sem_open(SEM_FORK, O_CREAT | O_EXCL,
+		0660, data->nb_philo)) == SEM_FAILED)
+		return (ERR_INIT + 10);
+	if ((data->meals = sem_open(SEM_MEAL, O_CREAT | O_EXCL,
+		0660, 0)) == SEM_FAILED)
+		return (ERR_INIT + 11);
+	if ((data->state = sem_open(SEM_STAT, O_CREAT | O_EXCL,
 		0660, 1)) == SEM_FAILED)
-		return (FAILED);
+		return (ERR_INIT + 12);
+	if ((data->print = sem_open(SEM_MSGS, O_CREAT | O_EXCL,
+		0660, 1)) == SEM_FAILED)
+		return (ERR_INIT + 13);
+	if ((data->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
+		0660, data->nb_philo / 2)) == SEM_FAILED)
+		return (ERR_INIT + 14);
+	if ((data->corpse = sem_open(SEM_DEAD, O_CREAT | O_EXCL,
+		0660, 0)) == SEM_FAILED)
+		return (ERR_INIT + 15);
 	return (SUCCESS);
 }
 
-int			get_param(char **av)
+int			get_param(char **av, t_philo *data)
 {
-	int	i;
-
-	i = -1;
-	if (init_param(av))
-		return (ERR_MALLOC);
-	if (!(g_philo->philo = (t_data**)malloc(sizeof(t_data*)
-		* g_philo->nb_philo)))
-		return (ERR_MALLOC);
-	while (++i < g_philo->nb_philo)
-	{
-		if (!(g_philo->philo[i] = data_philo(i)))
-			return (ERR_MALLOC);
-	}
-	if (init_philo())
-		return (ERR_INIT_MUTEX);
-	return (SUCCESS);
+	if (init_param(av, data))
+		return (ERR_INIT);
+	return (init_sem(data));
 }

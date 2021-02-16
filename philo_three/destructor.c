@@ -6,37 +6,35 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:29 by user42            #+#    #+#             */
-/*   Updated: 2021/02/08 14:45:51 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 15:15:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	clean_exit(int status)
+static void	clean_sem(t_philo *data)
 {
-	int i;
+	sem_unlink(SEM_FORK);
+	sem_unlink(SEM_MSGS);
+	sem_unlink(SEM_MEAL);
+	sem_unlink(SEM_STAT);
+	sem_unlink(SEM_LOCK);
+	sem_unlink(SEM_DEAD);
+	sem_close(data->forks);
+	sem_close(data->meals);
+	sem_close(data->print);
+	sem_close(data->state);
+	sem_close(data->lock);
+	sem_close(data->corpse);
+}
 
-	i = -1;
-	if (g_philo)
-	{
-		sem_unlink(SEM_LOCK);
-		sem_unlink(SEM_FORK);
-		sem_unlink(SEM_MEAL);
-		sem_unlink(SEM_DEAD);
-		sem_unlink(SEM_MSGS);
-		sem_close(g_philo->lock);
-		sem_close(g_philo->forks);
-		sem_close(g_philo->meals);
-		sem_close(g_philo->corpse);
-		sem_close(g_philo->print);
-		if (g_philo->philo)
-		{
-			while (++i < g_philo->nb_philo)
-				free(g_philo->philo[i]);
-			free(g_philo->philo);
-		}
-		free(g_philo);
-	}
-	g_philo = NULL;
-	return (status);
+int			clean_exit(t_philo *data, t_data *philo)
+{
+	int	res;
+
+	res = data->status;
+	clean_sem(data);
+	free(philo);
+	philo = NULL;
+	return (res);
 }
