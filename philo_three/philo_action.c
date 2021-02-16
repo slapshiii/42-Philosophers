@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 12:53:34 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 15:41:59 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 17:17:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*philo_monitor(void *arg)
 
 	philo = (t_data*)arg;
 	philo->last_meal = get_timestamp();
-	pthread_create(&monitor, NULL, &report, (void *)philo);
+	pthread_create(&monitor, NULL, &report, (void*)philo);
 	pthread_detach(monitor);
 	while (42 && !philo->status)
 	{

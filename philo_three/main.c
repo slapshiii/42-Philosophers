@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 15:39:06 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 17:20:03 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ static int		launch_philo(t_data *philo, int i)
 	if ((philo[i].pid = fork()) == -1)
 		return (ERR_INIT);
 	if (philo[i].pid == 0)
+	{
 		philo_monitor((void*)&philo[i]);
+		exit(0);
+	}
 	return (0);
 }
 

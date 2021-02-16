@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 16:10:05 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 17:24:24 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void		*checker_meal(void *arg)
 	}
 	if (ph->data->status != RUNNING)
 		return (NULL);
+	print_end(ph, 0);
 	ph->data->status = ENDED;
 	i = 0;
 	while (i < ph->data->nb_philo)
@@ -65,7 +66,6 @@ void		*checker_meal(void *arg)
 		i++;
 	}
 	sem_post(ph->data->corpse);
-	print_end(ph, 0);
 	return (NULL);
 }
 
@@ -83,7 +83,7 @@ void		*report(void *arg)
 			ph->status = DIED;
 			return (NULL);
 		}
-		if (ph->eaten >= ph->data->nb_must_eat)
+		if (ph->data->nb_must_eat != -1 && ph->eaten >= ph->data->nb_must_eat)
 		{
 			print_msg(ph, MSG_ENDED);
 			sem_post(ph->data->meals);
