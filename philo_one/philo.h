@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 16:37:39 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 11:08:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@
 # define ENDED 1
 # define DIED 2
 
-# define MSG_FORK " has taken a fork\n"
-# define MSG_EAT " is eating\n"
-# define MSG_SLEEP " is sleeping\n"
-# define MSG_THINK " is thinking\n"
-# define MSG_DIED " died\n"
-# define MSG_ENDED " finished\n"
+# define MSG_FORK "has taken a fork"
+# define MSG_EAT "is eating"
+# define MSG_SLEEP "is sleeping"
+# define MSG_THINK "is thinking"
+# define MSG_DIED "died"
+# define MSG_ENDED "finished"
 
 typedef struct	s_philo
 {
