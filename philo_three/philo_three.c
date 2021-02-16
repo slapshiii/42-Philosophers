@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 15:10:49 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 16:06:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ void		*report(void *arg)
 			print_msg(ph, MSG_DIED);
 			sem_post(ph->data->corpse);
 			ph->status = DIED;
-			break ;
+			return (NULL);
 		}
 		if (ph->eaten >= ph->data->nb_must_eat)
 		{
 			print_msg(ph, MSG_ENDED);
 			sem_post(ph->data->meals);
 			ph->status = ENDED;
-			break ;
+			return (NULL);
 		}
 		usleep(10);
 	}

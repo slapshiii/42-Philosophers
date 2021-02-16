@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:37:25 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 15:18:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 16:05:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	init_sem(t_philo *data)
 		0660, 1)) == SEM_FAILED)
 		return (ERR_INIT + 13);
 	if ((data->lock = sem_open(SEM_LOCK, O_CREAT | O_EXCL,
-		0660, data->nb_philo / 2)) == SEM_FAILED)
+		0660, 1)) == SEM_FAILED)
 		return (ERR_INIT + 14);
 	if ((data->corpse = sem_open(SEM_DEAD, O_CREAT | O_EXCL,
 		0660, 0)) == SEM_FAILED)
