@@ -5,32 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/03 14:37:05 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:52:12 by user42           ###   ########.fr       */
+/*   Created: 2021/02/15 12:53:34 by user42            #+#    #+#             */
+/*   Updated: 2021/02/16 09:46:22 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_data	*data_philo(int i)
-{
-	t_data	*res;
-
-	if (!(res = (t_data*)malloc(sizeof(t_data))))
-		return (NULL);
-	memset(res, 0, sizeof(t_data));
-	res->id = i;
-	res->status = 1;
-	gettimeofday(&(res->last_meal), NULL);
-	return (res);
-}
-
 void	*philo_monitor(void *arg)
 {
-	t_data	*philo;
+	t_data		*philo;
+	pthread_t	monitor;
 
-	philo = arg;
-	while (philo->status)
+	philo = (t_data*)arg;
+	philo->last_meal = get_timestamp();
+	pthread_create(&monitor, NULL, &report_corpse, (void *)philo);
+	pthread_detach(monitor);
+	while (42 && philo->data->status != DIED && philo->data->status != ENDED)
 	{
 		philo_fork(philo);
 		philo_eat(philo);
@@ -41,37 +32,29 @@ void	*philo_monitor(void *arg)
 
 void	philo_fork(t_data *philo)
 {
-	sem_wait(g_philo->lock);
-	sem_wait(g_philo->forks);
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_FORK);
-	sem_post(g_philo->print);
-	sem_wait(g_philo->forks);
-	sem_post(g_philo->lock);
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_FORK);
-	sem_post(g_philo->print);
+	sem_wait(philo->data->lock);
+	sem_wait(philo->data->forks);
+	print_msg(philo, MSG_FORK);
+	sem_wait(philo->data->forks);
+	sem_post(philo->data->lock);
+	print_msg(philo, MSG_FORK);
 }
 
 void	philo_eat(t_data *philo)
 {
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_EAT);
-	sem_post(g_philo->print);
-	gettimeofday(&(philo->last_meal), NULL);
-	usleep(g_philo->time_to_eat);
-	philo->nb_meal++;
-	sem_post(g_philo->forks);
-	sem_post(g_philo->forks);
+	print_msg(philo, MSG_EAT);
+	philo->last_meal = get_timestamp();
+	my_usleep(philo->data->time_to_eat, philo->id);
+	sem_wait(philo->data->meals);
+	philo->data->finished++;
+	sem_post(philo->data->meals);
+	sem_post(philo->data->forks);
+	sem_post(philo->data->forks);
 }
 
 void	philo_rest(t_data *philo)
 {
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_SLEEP);
-	sem_post(g_philo->print);
-	usleep(g_philo->time_to_sleep);
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_THINK);
-	sem_post(g_philo->print);
+	print_msg(philo, MSG_SLEEP);
+	my_usleep(philo->data->time_to_sleep, philo->id);
+	print_msg(philo, MSG_THINK);
 }

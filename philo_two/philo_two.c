@@ -6,59 +6,62 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 12:48:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/15 17:36:25 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	report_corpse(t_data *philo)
+static void	print_end(t_data *philo, int i)
 {
-	struct timeval	time;
-	int				diff;
-	int				time_i;
-	int				time_p;
+	sem_wait(philo[i].data->print);
+	printf("All philosophers have eaten\n");
+	sem_wait(philo[i].data->state);
+	philo[i].data->status = ENDED;
+	sem_post(philo[i].data->state);
+	sem_post(philo[i].data->print);
+}
 
-	gettimeofday(&time, NULL);
-	time_i = get_timestamp(&time);
-	time_p = get_timestamp(&philo->last_meal);
-	diff = time_i - time_p;
-	if (diff > g_philo->time_to_die)
+void		*checker(void *arg)
+{
+	t_data	*ph;
+	int		i;
+
+	ph = (t_data*)arg;
+	while (42 && ph[0].data->status != ENDED && ph[0].data->status != DIED)
 	{
-		sem_wait(g_philo->print);
-		print_msg(philo->id, MSG_DIED);
-		g_philo->status = 0;
-		sem_post(g_philo->print);
-		philo->status = 0;
+		i = 0;
+		while (i < ph[0].data->nb_philo && ph[0].data->status != ENDED &&
+		ph[0].data->status != DIED)
+		{
+			if (ph[0].data->nb_must_eat != -1 && ph[i].data->finished >=
+				(ph[0].data->nb_philo * ph[0].data->nb_must_eat))
+			{
+				print_end(ph, i);
+			}
+			i++;
+		}
+		usleep(1);
 	}
+	return (NULL);
 }
 
-void	report_meal(t_data *philo)
+void		*report_corpse(void *arg)
 {
-	if (g_philo->nb_must_eat == -1)
-		return ;
-	if (philo->nb_meal < g_philo->nb_must_eat)
-		return ;
-	sem_wait(g_philo->meals);
-	g_philo->finished++;
-	philo->status = 0;
-	sem_post(g_philo->meals);
-	sem_wait(g_philo->print);
-	print_msg(philo->id, MSG_ENDED);
-	if (g_philo->finished == g_philo->nb_philo)
-		g_philo->status = 0;
-	sem_post(g_philo->print);
-}
+	t_data	*ph;
 
-void	*watcher_loop(void *arg)
-{
-	t_data	*philo;
-
-	philo = arg;
-	while (philo->status)
+	ph = (t_data*)arg;
+	while (42 && ph->data->status != DIED && ph->data->status != ENDED)
 	{
-		report_meal(philo);
-		report_corpse(philo);
+		if (get_timestamp() - ph->last_meal > ph->data->time_to_die)
+		{
+			print_msg(ph, MSG_DIED);
+			sem_wait(ph->data->state);
+			ph->data->status = DIED;
+			sem_post(ph->data->state);
+			break ;
+		}
+		usleep(10);
 	}
 	return (NULL);
 }

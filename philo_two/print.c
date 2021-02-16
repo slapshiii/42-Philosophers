@@ -6,53 +6,68 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 13:00:10 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 10:42:46 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static void	compose_msg(char *res, char *time, char *id, char *code)
+/*
+static size_t	get_size_num(int num)
 {
-	int	i;
+	size_t		len;
 
-	i = 0;
-	while (*time)
-		res[i++] = *(time++);
-	res[i++] = ' ';
-	while (*id)
-		res[i++] = *(id++);
-	res[i++] = ' ';
-	while (*code)
-		res[i++] = *(code++);
-	res[i++] = '\n';
+	len = 0;
+	if (num == 0)
+		return (1);
+	if (num < 0)
+	{
+		num *= -1;
+		len++;
+	}
+	while (num > 0)
+	{
+		num /= 10;
+		len++;
+	}
+	return (len);
 }
 
-void		print_msg(int id, int msg)
+static void		ft_putstr(char *str)
 {
-	struct timeval	time;
-	char			str[50];
-	int				timestamp;
-	char			char_time[12];
-	char			char_id[12];
+	size_t	len;
 
-	gettimeofday(&time, NULL);
-	memset(str, 0, sizeof(str));
-	timestamp = get_timestamp(&time);
-	ft_itoa_dec(timestamp, char_time);
-	ft_itoa_dec(id + 1, char_id);
-	if (msg == MSG_FORK)
-		compose_msg(str, char_time, char_id, "has taken a fork");
-	else if (msg == MSG_EAT)
-		compose_msg(str, char_time, char_id, "is eating");
-	else if (msg == MSG_SLEEP)
-		compose_msg(str, char_time, char_id, "is sleeping");
-	else if (msg == MSG_THINK)
-		compose_msg(str, char_time, char_id, "is thinking");
-	else if (msg == MSG_DIED)
-		compose_msg(str, char_time, char_id, "died");
-	else if (msg == MSG_ENDED)
-		compose_msg(str, char_time, char_id, "finished");
-	if (g_philo->status)
-		write(1, str, ft_strlen(str));
+	len = ft_strlen(str);
+	write(1, str, len);
+}
+
+static void		ft_putnbr(unsigned long n)
+{
+	char	line[11];
+	size_t	i;
+
+	i = get_size_num(n);
+	line[i] = '\0';
+	i--;
+	if (n == 0)
+		write(1, "0", 1);
+	while (n > 0)
+	{
+		line[i] = '0' + (n % 10);
+		n /= 10;
+		i--;
+	}
+	ft_putstr(line);
+}*/
+
+void			print_msg(t_data *philo, char *msg)
+{
+	long	timestamp;
+
+	sem_wait(philo->data->print);
+	if (philo->data->status != DIED && philo->data->status != ENDED)
+	{
+		timestamp = get_timestamp();
+		printf("%ld %d %s\n", timestamp, philo->id + 1, msg);
+	}
+	sem_post(philo->data->print);
 }

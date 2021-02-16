@@ -6,23 +6,22 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:30:22 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 13:00:42 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/14 14:40:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-char	*ft_strcat(char *dest, char *srcs)
+char	*ft_strcat(char *dest, const char *srcs)
 {
-	while (dest && *dest)
-		dest++;
-	while (srcs && *srcs)
-	{
-		*dest = *srcs;
-		dest++;
-		srcs++;
-	}
-	*dest = '\0';
+	size_t	i;
+	char	*s;
+
+	i = ft_strlen(dest);
+	s = (char *)srcs;
+	while (s && *s)
+		dest[i++] = *(s++);
+	dest[i] = '\0';
 	return (dest);
 }
 
@@ -83,10 +82,10 @@ char	*ft_itoa_dec(int num, char *res)
 	return (res);
 }
 
-int		get_timestamp(struct timeval *time)
+long	get_timestamp(void)
 {
-	int res;
+	struct timeval	time;
 
-	res = time->tv_usec / 1000 + (time->tv_sec % 100000) * 1000;
-	return (res);
+	gettimeofday(&time, NULL);
+	return (time.tv_sec * 1000L + time.tv_usec / 1000L);
 }

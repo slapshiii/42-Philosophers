@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/09 13:01:51 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/16 09:45:59 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <string.h>
 # include <unistd.h>
 # include <pthread.h>
-# include <sys/time.h>
 # include <semaphore.h>
+# include <sys/time.h>
 # include <fcntl.h>
 # include <sys/stat.h>
 
@@ -35,28 +35,22 @@
 # define ERR_INIT 5
 # define ERR_INIT_MUTEX 6
 
-# define MSG_FORK 0
-# define MSG_EAT 1
-# define MSG_SLEEP 2
-# define MSG_THINK 3
-# define MSG_DIED 4
-# define MSG_ENDED 5
+# define RUNNING 0
+# define ENDED 1
+# define DIED 2
 
-# define SEM_LOCK "sem_lock"
-# define SEM_FORK "sem_fork"
-# define SEM_DEAD "sem_dead"
-# define SEM_MEAL "sem_meal"
-# define SEM_MSGS "sem_msgs"
+# define MSG_FORK "has taken a fork"
+# define MSG_EAT "is eating"
+# define MSG_SLEEP "is sleeping"
+# define MSG_THINK "is thinking"
+# define MSG_DIED "died"
+# define MSG_ENDED "finished"
 
-typedef struct	s_data
-{
-	int				status;
-	int				nb_meal;
-	int				id;
-	struct timeval	last_meal;
-	pthread_t		monitor;
-	pthread_t		main;
-}				t_data;
+# define SEM_MEAL "/sem_meal"
+# define SEM_MSGS "/sem_msgs"
+# define SEM_FORK "/sem_fork"
+# define SEM_STAT "/sem_stat"
+# define SEM_LOCK "/sem_lock"
 
 typedef struct	s_philo
 {
@@ -65,41 +59,47 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nb_must_eat;
-	int				finished;
 	int				status;
-	sem_t			*forks;
-	sem_t			*lock;
+	int				finished;
 	sem_t			*meals;
 	sem_t			*print;
-	t_data			**philo;
+	sem_t			*forks;
+	sem_t			*state;
+	sem_t			*lock;
 }				t_philo;
 
-t_philo			*g_philo;
+typedef struct	s_data
+{
+	t_philo			*data;
+	int				id;
+	int				eaten;
+	long			last_meal;
+	pthread_t		monitor;
+}				t_data;
 
-int				get_param(char **av);
+int				get_param(char **av, t_philo *data);
 
-int				clean_exit(int status);
+int				clean_exit(t_philo *data, t_data *philo);
 
-void			report_corpse(t_data *philo);
-void			report_meal(t_data *philo);
-void			*watcher_loop(void *arg);
-void			launch_thread(void);
+void			*report_corpse(void *arg);
+void			launch_thread(t_philo *data, t_data *philo);
 
-t_data			*data_philo(int i);
+void			*checker(void *arg);
 void			*philo_monitor(void *arg);
 void			philo_fork(t_data *philo);
 void			philo_eat(t_data *philo);
 void			philo_rest(t_data *philo);
 
-void			print_msg(int id, int msg);
+void			print_msg(t_data *philo, char *msg);
 
-char			*ft_strcat(char *dest, char *srcs);
+char			*ft_strcat(char *dest, const char *srcs);
 char			*ft_strcpy(char *dest, const char *srcs);
 size_t			ft_strlen(char *str);
-int				get_timestamp(struct timeval *time);
+long			get_timestamp(void);
 int				is_whitespace(char c);
 int				ft_atoi(const char *s);
 char			*ft_itoa_dec(int num, char *res);
 char			*reverse(char *str, int len);
+void			my_usleep(int time, int id);
 
 #endif
