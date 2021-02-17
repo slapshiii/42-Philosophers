@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:34:51 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 17:21:21 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:27:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void			print_msg(t_data *philo, char *msg);
 
 char			*ft_strcat(char *dest, const char *srcs);
 char			*ft_strcpy(char *dest, const char *srcs);
+int				ft_strcmp(const char *s1, const char *s2);
 size_t			ft_strlen(char *str);
 long			get_timestamp(void);
 int				is_whitespace(char c);

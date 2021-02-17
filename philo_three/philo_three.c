@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/17 09:56:27 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:25:13 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void		*checker_dead(void *arg)
 	ph->data->status = DIED;
 	while (i < ph->data->nb_philo)
 	{
+		ph[i].status = ENDED;
 		sem_post(ph->data->meals);
 		kill(ph[i].pid, SIGKILL);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:27:58 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 17:36:25 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:14:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void		*report_corpse(void *arg)
 	{
 		if (get_timestamp() - ph->last_meal > ph->data->time_to_die)
 		{
-			print_msg(ph, MSG_DIED);
 			sem_wait(ph->data->state);
+			print_msg(ph, MSG_DIED);
 			ph->data->status = DIED;
 			sem_post(ph->data->state);
 			break ;
