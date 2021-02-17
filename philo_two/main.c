@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/17 09:58:21 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:03:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void			launch_thread(t_philo *data, t_data *philo)
 		if (pthread_create(&philo[i].monitor, NULL,
 			philo_monitor, &philo[i]) < 0)
 		{
-			printf("thread create error\n");
+			write(2, "thread create error\n", 20);
 			return ;
 		}
 		usleep(20);

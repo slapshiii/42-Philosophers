@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 17:20:03 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:03:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ void			launch_thread(t_philo *data, t_data *philo)
 	while (i < data->nb_philo)
 	{
 		if (launch_philo(philo, i))
+		{
+			write(2, "process create error\n", 21);
 			return ;
+		}
 		usleep(20);
 		i++;
 	}
@@ -80,7 +83,7 @@ int				main(int ac, char **av)
 	{
 		if ((data.status = get_param(av, &data)))
 		{
-			fprintf(stderr, "An error has occured\n");
+			write(2, "An error has occured\n", 21);
 			return (clean_exit(&data, philo));
 		}
 		philo = init_thread(&data);

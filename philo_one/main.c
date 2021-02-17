@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 14:38:45 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:03:17 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void			launch_thread(t_philo *data, t_data *philo)
 		if (pthread_create(&philo[i].monitor, NULL,
 			philo_monitor, &philo[i]) < 0)
 		{
-			printf("thread create error\n");
+			write(2, "thread create error\n", 20);
 			return ;
 		}
 		usleep(20);
@@ -76,7 +76,7 @@ int				main(int ac, char **av)
 	{
 		if ((data.status = get_param(av, &data)))
 		{
-			fprintf(stderr, "An error has occured\n");
+			write(2, "An error has occured\n", 21);
 			return (clean_exit(&data, philo));
 		}
 		philo = init_thread(&data);
