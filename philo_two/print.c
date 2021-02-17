@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:38:53 by user42            #+#    #+#             */
-/*   Updated: 2021/02/17 10:24:50 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:31:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,5 @@ void			print_msg(t_data *philo, char *msg)
 		timestamp = get_timestamp();
 		printf("%ld %d %s\n", timestamp, philo->id + 1, msg);
 	}
-	if (ft_strcmp(msg, MSG_DIED))
-		sem_post(philo->data->print);
+	sem_post(philo->data->print);
 }

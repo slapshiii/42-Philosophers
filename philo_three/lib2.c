@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/08 17:18:56 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 11:11:20 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 10:30:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ char	*ft_strcpy(char *dest, const char *srcs)
 	}
 	dest[i] = '\0';
 	return (dest);
+}
+
+int		ft_strcmp(const char *s1, const char *s2)
+{
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return(*s1 - *s2);
 }
 
 size_t	ft_strlen(char *str)
