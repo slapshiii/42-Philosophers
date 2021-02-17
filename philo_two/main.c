@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 15:32:30 by user42            #+#    #+#             */
-/*   Updated: 2021/02/15 17:12:36 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 09:58:21 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int				main(int ac, char **av)
 	{
 		if ((data.status = get_param(av, &data)))
 		{
-			fprintf(stderr, "An error has occured\n");
+			write(2, "An error has occured\n", 21);
 			return (clean_exit(&data, philo));
 		}
 		philo = init_thread(&data);

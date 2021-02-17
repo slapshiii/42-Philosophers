@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 12:53:34 by user42            #+#    #+#             */
-/*   Updated: 2021/02/16 09:46:22 by user42           ###   ########.fr       */
+/*   Updated: 2021/02/17 09:57:08 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	philo_eat(t_data *philo)
 {
 	print_msg(philo, MSG_EAT);
 	philo->last_meal = get_timestamp();
-	my_usleep(philo->data->time_to_eat, philo->id);
+	my_usleep(philo->data->time_to_eat);
 	sem_wait(philo->data->meals);
 	philo->data->finished++;
 	sem_post(philo->data->meals);
@@ -55,6 +55,6 @@ void	philo_eat(t_data *philo)
 void	philo_rest(t_data *philo)
 {
 	print_msg(philo, MSG_SLEEP);
-	my_usleep(philo->data->time_to_sleep, philo->id);
+	my_usleep(philo->data->time_to_sleep);
 	print_msg(philo, MSG_THINK);
 }
