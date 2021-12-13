@@ -1,4 +1,4 @@
-# 42cursus - philosopher
+# 42cursus - philosophers v.7
 
 ![](https://img.shields.io/badge/eval-100%25-brightgreen)
 ![](https://img.shields.io/badge/norminette%202.0.0-passing-brightgreen)
