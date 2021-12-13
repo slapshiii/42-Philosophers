@@ -1,4 +1,4 @@
-# 42cursus - philosopher v.7
+# 42cursus - philosopher
 
 ![](https://img.shields.io/badge/eval-100%25-brightgreen)
 ![](https://img.shields.io/badge/norminette%202.0.0-passing-brightgreen)
@@ -7,8 +7,14 @@
 
 ### About
 
-In this project, you will learn the basics of threading a process. You will
+> In this project, you will learn the basics of threading a process. You will
 learn how to make threads. You will discover the mutex and the semaphore.
+
+This project is about optimisation to save the most CPU usage possible to ensure the survival of all our philosophers.
+
+**philo_one**: only multi-threads and mutex allowed
+**philo_two**: only multi-threads and semaphore allowed
+**philo_three**: only multi-processes and semaphore allowed
 
 ### Mandatory
 
