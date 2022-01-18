@@ -13,7 +13,9 @@ learn how to make threads. You will discover the mutex and the semaphore.
 This project is about optimisation to save the most CPU usage possible to ensure the survival of all our philosophers.
 
 **philo_one**: only multi-threads and mutex allowed
+
 **philo_two**: only multi-threads and semaphore allowed
+
 **philo_three**: only multi-processes and semaphore allowed
 
 ### Mandatory
